@@ -1,0 +1,61 @@
+#include "stdafx.h"
+#include "Enemy.h"
+
+Enemy::Enemy()
+{
+	//アニメーションクリップをロードする。
+	animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
+	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+	animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
+	animationClips[enAnimationClip_Walk].SetLoopFlag(true);
+	animationClips[enAnimationClip_Jump].Load("Assets/animData/jump.tka");
+	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
+	animationClips[enAnimationClip_Run].Load("Assets/animData/run.tka");
+	animationClips[enAnimationClip_Run].SetLoopFlag(true);
+	testModel.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
+
+	//キャラコンを初期化する。
+	characterController.Init(25.0f, 75.0f, position);
+}
+
+Enemy::~Enemy()
+{
+
+}
+
+void Enemy::Update()
+{
+	testModel.Update();
+
+	//死亡処理
+	if (EnemyHP <= 0)
+	{
+		IsDie();
+	}
+
+	//memo::敵のHP表示
+	swprintf_s(font, L"敵HP: %d", EnemyHP);
+	fontRender.SetText(font);
+	fontRender.SetPosition({ -130.0f,500.0f,0.0f });
+	fontRender.SetColor(g_vec4White);
+}
+
+void Enemy::OnHit(int damage)
+{
+	EnemyHP -= damage;
+}
+
+void Enemy::Render(RenderContext& rc)
+{
+	testModel.Draw(rc);
+	fontRender.Draw(rc);
+}
+
+//死亡処理
+void Enemy::IsDie()
+{
+	
+
+	//最後に自分削除
+	DeleteGO(this);
+}
