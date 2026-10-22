@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="system">
+      <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw">
+      <UniqueIdentifier>{7be905c8-ebff-48c0-bf3b-4826582015f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sene">
+      <UniqueIdentifier>{bb145938-8ef6-4e56-b0f7-9a070bd87bd4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="system\system.cpp">
+      <Filter>system</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="StageSelect.cpp">
+      <Filter>Sene</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>Sene</Filter>
+    </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>Sene</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>Sene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="DebugStage.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="PlatformManeger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h">
+      <Filter>system</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="StageSelect.h">
+      <Filter>Sene</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>Sene</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
+      <Filter>Sene</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Sene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="DebugStage.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Platform.h" />
+    <ClInclude Include="PlatformManeger.h" />
+  </ItemGroup>
+</Project>
