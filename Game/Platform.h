@@ -8,15 +8,21 @@ public:
 	~Platform();
 	void Update();
 	void Render(RenderContext& rc);
+	void InitPlatform();
+
+	//この足場の座標
+	Vector3 notePos;
+
+	//実際に表示するモデル番号(配列からモデルを表示させるのに使う)
+	int noteIndex;
+
+	//回転
+	Quaternion noteRotate;
 
 private:
 	//足場のモデル(memo::とりあえず1個)
 	ModelRender note[1];
 
-	//実際に表示するモデル番号(配列からモデルを表示させるのに使う)
-	int noteIndex;
-
-	//この足場の座標
-	Vector3 notePos;
+	PhysicsStaticObject noteObject;
 };
 

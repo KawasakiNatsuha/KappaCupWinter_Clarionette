@@ -2,6 +2,8 @@
 #include "ObjectPool.h"
 #include "Bullet.h"
 
+class PlatformManeger;
+
 class Player:public IGameObject
 	
 {
@@ -14,6 +16,7 @@ public:
 	void ManagePlayerState();
 	void PlayerAnimetion();
 	void PlayerAttack();
+	void PlayerModeChange();
 
 	//メンバ変数。
 	ModelRender modelRender;	//モデルレンダ―。
@@ -30,6 +33,9 @@ public:
 	Vector3 moveSpeed;		//移動速度。
 	Quaternion rotation;  //クォータニオン。
 	int playerState = 0;	//プレイヤーのステート(状態)を表す変数。
+	Vector3 dushSpeed;		//慣性ジャンプに使うダッシュ速度
+
+	PlatformManeger* platformManeger;
 
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
@@ -39,10 +45,22 @@ private:
 
 	GameTime gametime;
 
-	//弾用のプール
+	//弾用のオブジェクトプール
 	ObjectPool<Bullet> m_bulletPool;
 
-	//攻撃ボタン。memo::操作感を見ながら調整。
-	EnButton attackButton = enButtonRB2;
+	//ボタン。memo::操作感を見ながら調整。
+	EnButton attackButton = enButtonRB2;      //攻撃/足場設置ボタン。
+	EnButton switchButton = enButtonY;        //モード切替ボタン。
+
+	//モード
+	enum PlayerMode
+	{
+		attack,           //攻撃モード。攻撃ボタンで攻撃できる。
+		installation,     //設置モード。位置を決めて足場を設置できる。
+	};
+	PlayerMode playerMode = attack;
+
+	//音符の形状
+	int player_noteIndex = 0;
 };
 

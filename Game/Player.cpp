@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "PlatformManeger.h"
 
 Player::Player()
 {
@@ -28,23 +29,82 @@ Player::Player()
 
 void Player::Update()
 {
+	//PlatformManegerがあるかどうか見る
+	platformManeger = FindGO<PlatformManeger>("platformmaneger");
+
+	//クールタイム明けに半透明モデルが無かったら作る
+	if (coolTime <= 0.0f && platformManeger == nullptr && playerMode == installation)
+	{
+		platformManeger = NewGO<PlatformManeger>(0, "platformmaneger");
+		//現在のモデルの形状を教える
+		platformManeger->noteGorIndex = player_noteIndex;
+		//引継ぎが終わったら初期化
+		platformManeger->PlatformManegerInit();
+	}
+
 	PlayerMove();
 	PlayerRotate();
 	ManagePlayerState();
 	PlayerAnimetion();
 
+	//攻撃ボタンで攻撃or設置
 	if (g_pad[0]->IsPress(attackButton)&& coolTime <= 0.0f)
 	{
-		PlayerAttack();
+		switch (playerMode)
+		{
+		case attack:
+			PlayerAttack();
+			break;
+		case installation:
+			platformManeger->PlatformInstallation();
+			coolTime = 1.0f;
+			break;
+		}
 	}
 
+	//クールタイム中
 	if (coolTime > 0.0f)
 	{
 		float playertime = gametime.GetFrameDeltaTime();
 		coolTime -= playertime;
 	}
 
+	//モード切替
+	if (g_pad[0]->IsTrigger(switchButton))
+	{
+		PlayerModeChange();
+	}
+
+
 	modelRender.Update();
+}
+
+//モード切替
+void Player::PlayerModeChange()
+{
+	switch (playerMode)
+	{
+	case attack:
+		//モードを切り替え、半透明モデルを生成
+		playerMode = installation;
+		platformManeger = NewGO<PlatformManeger>(0,"platformmaneger");
+		//現在のモデルの形状を教える
+		platformManeger->noteGorIndex = player_noteIndex;
+		//引継ぎが終わったら初期化
+		platformManeger->PlatformManegerInit();
+		break;
+	case installation:
+		//モードを切り替え、半透明モデルがあるなら削除
+		playerMode = attack;
+		if (platformManeger != nullptr)
+		{
+			DeleteGO(platformManeger);
+		}
+		break;
+	}
+
+	//切り替え後クールタイムをリセット
+	coolTime = 0.0f;
 }
 
 //プレイヤーの移動
@@ -53,6 +113,17 @@ void Player::PlayerMove()
 	//xzの移動速度を0.0fにする。
 	moveSpeed.x = 0.0f;
 	moveSpeed.z = 0.0f;
+
+	if (playerState != 1)
+	{
+		dushSpeed.x = 0.0f;
+		dushSpeed.z = 0.0f;
+	}
+	else
+	{
+		dushSpeed.x = 10.0f;
+		dushSpeed.z = 10.0f;
+	}
 
 	//左スティックの入力量を取得。
 	Vector3 stickL;
@@ -67,14 +138,14 @@ void Player::PlayerMove()
 	right.y = 0.0f;
 
 	//左スティックの入力量と120.0fを乗算。
-	right *= stickL.x * 120.0f;
-	forward *= stickL.y * 120.0f;
+	right *= stickL.x * 150.0f;
+	forward *= stickL.y * 150.0f;
 
 	//移動速度にスティックの入力量を加算する。
 	moveSpeed += right + forward;
 
-	//ダッシュ処理
-	if (g_pad[0]->IsPress(enButtonB))
+	//ダッシュ処理(ジャンプ中は無視される)
+	if (g_pad[0]->IsPress(enButtonB) && playerState != 1)
 	{
 		//xzの移動速度を0.0fにする。
 		moveSpeed.x = 0.0f;
@@ -98,6 +169,8 @@ void Player::PlayerMove()
 
 		//移動速度にスティックの入力量を加算する。
 		moveSpeed += right + forward;
+
+		dushSpeed = moveSpeed;
 	}
 
 	//地面に付いていたら。
@@ -109,15 +182,20 @@ void Player::PlayerMove()
 		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			//ジャンプさせる。
-			moveSpeed.y = 480.0f;
+			moveSpeed.y = 800.0f;
 		}
 	}
 	//地面に付いていなかったら。
 	else
 	{
 		//重力を発生させる。
-		moveSpeed.y -= 9.0f;
+		moveSpeed.y -= 15.0f;
+		moveSpeed.x += dushSpeed.x+20.0f;
+		moveSpeed.z += dushSpeed.z+20.0f;
 	}
+
+	moveSpeed.x *= 1.5f;
+	moveSpeed.z *= 1.5f;
 
 	//キャラクターコントローラーを使って座標を移動させる。
 	position = characterController.Execute(moveSpeed, 1.0f / 60.0f);
@@ -149,14 +227,14 @@ void Player::PlayerRotate()
 	}
 
 	//攻撃中はカメラ方向を向く
-	if (g_pad[0]->IsPress(attackButton))
+	if (g_pad[0]->IsPress(attackButton) && playerMode == attack)
 	{
 		Vector3 forward = g_camera3D->GetForward();
 
 		// 地面に沿った向きにする
 		forward.y = 0.0f;
 		forward.Normalize();
-		
+
 		rotation.SetRotationYFromDirectionXZ(forward);
 		modelRender.SetRotation(rotation);
 	}
