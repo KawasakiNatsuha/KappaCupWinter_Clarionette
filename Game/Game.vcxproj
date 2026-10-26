@@ -226,6 +226,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DebugStage.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FaseTime.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="main.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="DebugStage.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="FaseTime.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="ObjectPool.h" />

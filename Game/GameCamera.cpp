@@ -24,6 +24,11 @@ bool GameCamera::Start()
 	g_camera3D->SetNear(1.0f);
 	g_camera3D->SetFar(10000.0f);
 
+	//画角の変更
+	float angle = g_camera3D->GetViewAngle();
+	angle += 0.5f;
+	g_camera3D->SetViewAngle(angle);
+
 	return true;
 }
 void GameCamera::Update()
@@ -58,7 +63,7 @@ void GameCamera::Update()
 	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -0.2f) {
+	if (toPosDir.y < -0.5f) {
 		//カメラが上向きすぎ。
 		m_toCameraPos = toCameraPosOld;
 	}
@@ -69,6 +74,7 @@ void GameCamera::Update()
 
 	//視点を計算する。
 	Vector3 pos = target + m_toCameraPos;
+
 	//メインカメラに注視点と視点を設定する。
 	g_camera3D->SetTarget(target);
 	g_camera3D->SetPosition(pos);

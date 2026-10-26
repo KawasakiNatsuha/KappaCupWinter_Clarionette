@@ -37,6 +37,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformManeger.cpp" />
+    <ClCompile Include="FaseTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -64,5 +65,6 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformManeger.h" />
+    <ClInclude Include="FaseTime.h" />
   </ItemGroup>
 </Project>

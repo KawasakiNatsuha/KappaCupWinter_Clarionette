@@ -4,7 +4,8 @@
 #include "GameCamera.h"
 #include "DebugStage.h"
 #include "Enemy.h"
-#include"PlatformManeger.h"
+#include "PlatformManeger.h"
+#include "FaseTime.h"
 
 bool Game::Start()
 {	
@@ -13,6 +14,7 @@ bool Game::Start()
 	NewGO<GameCamera>(0, "gamecamera");
 	NewGO<DebugStage>(0, "debugstage");
 	NewGO<Enemy>(0, "enemy");
+	NewGO<FaseTime>(0, "faseTime");
 	//NewGO<PlatformManeger>(0, "platformManeger");
 
 	//modelRender.Init("Assets/modelData/Sop.tkm");
