@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "PlatformManeger.h"
+#include "FaseTime.h"
 
 Player::Player()
 {
@@ -31,6 +32,8 @@ void Player::Update()
 {
 	//PlatformManegerがあるかどうか見る
 	platformManeger = FindGO<PlatformManeger>("platformmaneger");
+	//現在のフェーズを確認する
+	faseTime = FindGO<FaseTime>("faseTime");
 
 	//クールタイム明けに半透明モデルが無かったら作る
 	if (coolTime <= 0.0f && platformManeger == nullptr && playerMode == installation)
@@ -47,34 +50,36 @@ void Player::Update()
 	ManagePlayerState();
 	PlayerAnimetion();
 
-	//攻撃ボタンで攻撃or設置
-	if (g_pad[0]->IsPress(attackButton)&& coolTime <= 0.0f)
+	if (faseTime->nowFase == FaseTime::Fase::attackFase)
 	{
-		switch (playerMode)
+		//攻撃ボタンで攻撃or設置
+		if (g_pad[0]->IsPress(attackButton) && coolTime <= 0.0f)
 		{
-		case attack:
-			PlayerAttack();
-			break;
-		case installation:
-			platformManeger->PlatformInstallation();
-			coolTime = 1.0f;
-			break;
+			switch (playerMode)
+			{
+			case attack:
+				PlayerAttack();
+				break;
+			case installation:
+				platformManeger->PlatformInstallation();
+				coolTime = 1.0f;
+				break;
+			}
+		}
+
+		//クールタイム中
+		if (coolTime > 0.0f)
+		{
+			float playertime = gametime.GetFrameDeltaTime();
+			coolTime -= playertime;
+		}
+
+		//モード切替
+		if (g_pad[0]->IsTrigger(switchButton))
+		{
+			PlayerModeChange();
 		}
 	}
-
-	//クールタイム中
-	if (coolTime > 0.0f)
-	{
-		float playertime = gametime.GetFrameDeltaTime();
-		coolTime -= playertime;
-	}
-
-	//モード切替
-	if (g_pad[0]->IsTrigger(switchButton))
-	{
-		PlayerModeChange();
-	}
-
 
 	modelRender.Update();
 }
@@ -226,17 +231,20 @@ void Player::PlayerRotate()
 		modelRender.SetRotation(rotation);
 	}
 
-	//攻撃中はカメラ方向を向く
-	if (g_pad[0]->IsPress(attackButton) && playerMode == attack)
+	if (faseTime->nowFase == FaseTime::Fase::attackFase)
 	{
-		Vector3 forward = g_camera3D->GetForward();
+		//攻撃中はカメラ方向を向く
+		if (g_pad[0]->IsPress(attackButton) && playerMode == attack)
+		{
+			Vector3 forward = g_camera3D->GetForward();
 
-		// 地面に沿った向きにする
-		forward.y = 0.0f;
-		forward.Normalize();
+			// 地面に沿った向きにする
+			forward.y = 0.0f;
+			forward.Normalize();
 
-		rotation.SetRotationYFromDirectionXZ(forward);
-		modelRender.SetRotation(rotation);
+			rotation.SetRotationYFromDirectionXZ(forward);
+			modelRender.SetRotation(rotation);
+		}
 	}
 }
 

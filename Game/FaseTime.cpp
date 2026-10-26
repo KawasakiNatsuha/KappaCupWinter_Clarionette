@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "FaseTime.h"
+#include "Player.h"
 
 FaseTime::FaseTime()
 {
@@ -13,12 +14,32 @@ FaseTime::~FaseTime()
 
 void FaseTime::Update()
 {
+	//Playerを見る
+	player = FindGO<Player>("player");
+
 	//時間経過
 	deltaTime += gameTime.GetFrameDeltaTime();
 	if (deltaTime >= 1.0f)
 	{
 		faseTimer -= 1;
 		deltaTime -= 1.0f;
+	}
+
+	//タイマー0でフェーズ切り替え
+	if (nowFase == attackFase && faseTimer <= 0)
+	{
+		faseTimer = firstTime;
+		//回避フェーズに切り替わるとき、攻撃モードでないなら初期状態(攻撃モード)に戻す
+		if (player->playerMode != Player::PlayerMode::attack)
+		{
+			player->PlayerModeChange();
+		}
+		nowFase = evadeFase;
+	}
+	if (nowFase == evadeFase && faseTimer <= 0)
+	{
+		faseTimer = firstTime;
+		nowFase = attackFase;
 	}
 
 	//memo::残り時間表示

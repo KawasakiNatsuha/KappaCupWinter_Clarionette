@@ -3,6 +3,7 @@
 #include "Bullet.h"
 
 class PlatformManeger;
+class FaseTime;
 
 class Player:public IGameObject
 	
@@ -37,6 +38,14 @@ public:
 
 	PlatformManeger* platformManeger;
 
+	//モード
+	enum PlayerMode
+	{
+		attack,           //攻撃モード。攻撃ボタンで攻撃できる。
+		installation,     //設置モード。位置を決めて足場を設置できる。
+	};
+	PlayerMode playerMode = attack;
+
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
 	float noteCoolTime[2];
@@ -52,15 +61,9 @@ private:
 	EnButton attackButton = enButtonRB2;      //攻撃/足場設置ボタン。
 	EnButton switchButton = enButtonY;        //モード切替ボタン。
 
-	//モード
-	enum PlayerMode
-	{
-		attack,           //攻撃モード。攻撃ボタンで攻撃できる。
-		installation,     //設置モード。位置を決めて足場を設置できる。
-	};
-	PlayerMode playerMode = attack;
-
 	//音符の形状
 	int player_noteIndex = 0;
+
+	FaseTime* faseTime;
 };
 
