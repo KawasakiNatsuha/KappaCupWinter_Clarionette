@@ -17,6 +17,9 @@ public:
 	//実際に表示するモデルの番号(Playerから渡してもらう)
 	int noteGorIndex;
 
+	//足場の出席番号
+	int platformIndex;
+
 private:
 
 	//設置予定位置に表示させる半透明モデル(memo::とりあえず一個)
@@ -39,8 +42,8 @@ private:
 	float depth = 500.0f;
 
 	//足場を近づける&遠ざけるボタン
-	EnButton nearButton = enButtonLB1;
-	EnButton farButton = enButtonRB1;
+	EnButton nearButton = enButtonDown;
+	EnButton farButton = enButtonUp;
 
 	//足場を回転させるボタン
 	EnButton rotButtonR = enButtonRight;

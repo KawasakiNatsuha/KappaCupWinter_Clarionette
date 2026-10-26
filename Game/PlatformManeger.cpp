@@ -91,6 +91,9 @@ void PlatformManeger::PlatformInstallation()
 	platform->notePos = noteGorPos;
 	platform->noteIndex = noteGorIndex;
 	platform->noteRotate = rotY;
+	platform->Index = platformIndex;
+	platformIndex += 1;
+	player->platformIndex = platformIndex;
 	//引継ぎが終わったら足場の初期化作業
 	platform->InitPlatform();
 

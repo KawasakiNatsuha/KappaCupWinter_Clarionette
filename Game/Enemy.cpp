@@ -3,17 +3,7 @@
 
 Enemy::Enemy()
 {
-	//アニメーションクリップをロードする。
-	animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
-	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
-	animationClips[enAnimationClip_Walk].SetLoopFlag(true);
-	animationClips[enAnimationClip_Jump].Load("Assets/animData/jump.tka");
-	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
-	animationClips[enAnimationClip_Run].Load("Assets/animData/run.tka");
-	animationClips[enAnimationClip_Run].SetLoopFlag(true);
-	testModel.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
-
+	testModel.Init("Assets/modelData/unityChan.tkm");
 	//キャラコンを初期化する。
 	characterController.Init(25.0f, 75.0f, position);
 }

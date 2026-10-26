@@ -69,7 +69,7 @@ void Bullet::Hit()
 	{
 		Vector3 diff = bulletPos - enemy->position;
 		//弾が当たり判定の内部に行ったら
-		if (diff.Length() <= enemy->collisionRadius)
+		if (diff.Length() <= 5.0f)
 		{
 			//memo::仮で10ダメージ
 			enemy->OnHit(10);

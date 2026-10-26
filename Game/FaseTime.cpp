@@ -32,13 +32,15 @@ void FaseTime::Update()
 		//回避フェーズに切り替わるとき、攻撃モードでないなら初期状態(攻撃モード)に戻す
 		if (player->playerMode != Player::PlayerMode::attack)
 		{
-			player->PlayerModeChange();
+			player->PlayerModeChange(Player::PlayerMode::installation);
 		}
 		nowFase = evadeFase;
 	}
 	if (nowFase == evadeFase && faseTimer <= 0)
 	{
 		faseTimer = firstTime;
+		//攻撃フェーズに戻るとき、ターン+1
+		TurnCount += 1;
 		nowFase = attackFase;
 	}
 

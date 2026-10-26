@@ -17,7 +17,7 @@ public:
 	void ManagePlayerState();
 	void PlayerAnimetion();
 	void PlayerAttack();
-	void PlayerModeChange();
+	
 
 	//メンバ変数。
 	ModelRender modelRender;	//モデルレンダ―。
@@ -45,6 +45,9 @@ public:
 		installation,     //設置モード。位置を決めて足場を設置できる。
 	};
 	PlayerMode playerMode = attack;
+	void PlayerModeChange(PlayerMode playermode);
+
+	int platformIndex = 0;		//足場の出席番号(直前の足場を知るために使う)
 
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
@@ -58,12 +61,20 @@ private:
 	ObjectPool<Bullet> m_bulletPool;
 
 	//ボタン。memo::操作感を見ながら調整。
-	EnButton attackButton = enButtonRB2;      //攻撃/足場設置ボタン。
-	EnButton switchButton = enButtonY;        //モード切替ボタン。
+	EnButton attackButton = enButtonRB2;		//攻撃ボタン。
+	EnButton platformButton = enButtonLB2;		//足場設置ボタン。
+	EnButton switchButton = enButtonRB1;        //モード切替ボタン1。
+	EnButton switchButton2 = enButtonLB1;		//モード切替ボタン2。
 
 	//音符の形状
 	int player_noteIndex = 0;
 
 	FaseTime* faseTime;
+
+	bool isJump = false;		//二段ジャンプ用
+
+	Vector3 buckPosition;		//落下したとき戻る座標
+
+	int fallCount = 0;			//連続落下した回数(3回以上で初期の足場に戻る)
 };
 

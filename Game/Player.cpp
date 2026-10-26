@@ -41,6 +41,7 @@ void Player::Update()
 		platformManeger = NewGO<PlatformManeger>(0, "platformmaneger");
 		//現在のモデルの形状を教える
 		platformManeger->noteGorIndex = player_noteIndex;
+		platformManeger->platformIndex = platformIndex;
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
@@ -50,20 +51,24 @@ void Player::Update()
 	ManagePlayerState();
 	PlayerAnimetion();
 
+	//アタックフェーズのときの処理
 	if (faseTime->nowFase == FaseTime::Fase::attackFase)
 	{
 		//攻撃ボタンで攻撃or設置
 		if (g_pad[0]->IsPress(attackButton) && coolTime <= 0.0f)
 		{
-			switch (playerMode)
+			if (playerMode == attack)
 			{
-			case attack:
 				PlayerAttack();
-				break;
-			case installation:
+			}
+		}
+
+		if (g_pad[0]->IsTrigger(platformButton) && coolTime <= 0.0f)
+		{
+			if (playerMode == installation)
+			{
 				platformManeger->PlatformInstallation();
 				coolTime = 1.0f;
-				break;
 			}
 		}
 
@@ -77,35 +82,48 @@ void Player::Update()
 		//モード切替
 		if (g_pad[0]->IsTrigger(switchButton))
 		{
-			PlayerModeChange();
+			PlayerModeChange(installation);
 		}
+		if (g_pad[0]->IsTrigger(switchButton2))
+		{
+			PlayerModeChange(attack);
+		}
+	}
+
+	//足場の上にいるのなら
+	if (characterController.IsOnGround() == true)
+	{
+		buckPosition = position;
+		fallCount = 0;
 	}
 
 	modelRender.Update();
 }
 
+//備忘録::次はplayerのHPの実装だぞ
+
 //モード切替
-void Player::PlayerModeChange()
+void Player::PlayerModeChange(PlayerMode playermode)
 {
-	switch (playerMode)
+	if (playermode == attack && playerMode == attack)
 	{
-	case attack:
 		//モードを切り替え、半透明モデルを生成
 		playerMode = installation;
-		platformManeger = NewGO<PlatformManeger>(0,"platformmaneger");
+		platformManeger = NewGO<PlatformManeger>(0, "platformmaneger");
 		//現在のモデルの形状を教える
 		platformManeger->noteGorIndex = player_noteIndex;
+		platformManeger->platformIndex = platformIndex;
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
-		break;
-	case installation:
+	}
+	if (playermode == installation && playerMode == installation)
+	{
 		//モードを切り替え、半透明モデルがあるなら削除
 		playerMode = attack;
 		if (platformManeger != nullptr)
 		{
 			DeleteGO(platformManeger);
 		}
-		break;
 	}
 
 	//切り替え後クールタイムをリセット
@@ -187,7 +205,8 @@ void Player::PlayerMove()
 		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			//ジャンプさせる。
-			moveSpeed.y = 800.0f;
+			moveSpeed.y = 500.0f;
+			isJump = true;
 		}
 	}
 	//地面に付いていなかったら。
@@ -195,8 +214,13 @@ void Player::PlayerMove()
 	{
 		//重力を発生させる。
 		moveSpeed.y -= 15.0f;
-		moveSpeed.x += dushSpeed.x+20.0f;
-		moveSpeed.z += dushSpeed.z+20.0f;
+
+		if (g_pad[0]->IsTrigger(enButtonA) && isJump == true)
+		{
+			//二段ジャンプさせる。
+			moveSpeed.y += 400.0f;
+			isJump = false;
+		}
 	}
 
 	moveSpeed.x *= 1.5f;
@@ -208,9 +232,16 @@ void Player::PlayerMove()
 	//落下したとき
 	if (position.y < -1500.0f)
 	{
-		position.x = 0.0f;
-		position.y = 50.0f;
-		position.z = 0.0f;
+		position = buckPosition;
+		position.y += 50.0f;
+		fallCount += 1;
+
+		if (fallCount >= 3)
+		{
+			position.x = 0.0f;
+			position.y = 50.0f;
+			position.z = 0.0f;
+		}
 
 		characterController.SetPosition(position);
 	}
