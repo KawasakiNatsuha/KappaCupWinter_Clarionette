@@ -14,8 +14,11 @@ bool Game::Start()
 	NewGO<Player>(0, "player");
 	NewGO<GameCamera>(0, "gamecamera");
 	//NewGO<DebugStage>(0, "debugstage");
-	NewGO<Enemy>(0, "enemy");
+	Enemy* enemy = NewGO<Enemy>(0, "enemy");
 	NewGO<FaseTime>(0, "faseTime");
+
+	//テスト用初期化
+	enemy->Init(100, 10, 0.1f, 10.0f);
 
 	//初期足場
 	platform = NewGO<Platform>(0, "platform");

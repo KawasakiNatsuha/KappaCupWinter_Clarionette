@@ -12,11 +12,12 @@ Bullet::~Bullet()
 
 }
 
-void Bullet::Fire(const Vector3& pos, const Vector3& dir)
+void Bullet::Fire(const Vector3& pos, const Vector3& dir,int attack)
 {
 	bulletPos = pos;
 	bulletMoveVec = dir;
 	m_startPos = pos;
+	Attack = attack;
 
 	debugBullet.SetPosition(bulletPos);
 
@@ -67,9 +68,20 @@ void Bullet::Hit()
 	enemy = FindGO<Enemy>("enemy");
 	if (enemy != nullptr)
 	{
+		//当たり判定
 		Vector3 diff = bulletPos - enemy->position;
+		//縦の当たり判定
+		Vector3 enemyUp = enemy->position;
+		enemyUp.y += 70.0f;
+		Vector3 diffUp = bulletPos - enemyUp;
 		//弾が当たり判定の内部に行ったら
-		if (diff.Length() <= 5.0f)
+		if (diff.Length() <= 100.0f)
+		{
+			//memo::仮で10ダメージ
+			enemy->OnHit(10);
+			Deactivate();
+		}
+		else if (diffUp.Length() <= 100.0f)
 		{
 			//memo::仮で10ダメージ
 			enemy->OnHit(10);

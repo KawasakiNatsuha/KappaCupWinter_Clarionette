@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "PlatformManeger.h"
 #include "FaseTime.h"
+#include "Enemy.h"
 
 Player::Player()
 {
@@ -45,7 +46,8 @@ void Player::Update()
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
-
+	
+	
 	PlayerMove();
 	PlayerRotate();
 	ManagePlayerState();
@@ -99,8 +101,6 @@ void Player::Update()
 
 	modelRender.Update();
 }
-
-//備忘録::次はplayerのHPの実装だぞ
 
 //モード切替
 void Player::PlayerModeChange(PlayerMode playermode)
@@ -353,9 +353,15 @@ void Player::PlayerAttack()
 
 	if (bullet != nullptr)
 	{
-		bullet->Fire(m_shotPos, m_forward);
+		bullet->Fire(m_shotPos, m_forward,noteAttack[player_noteIndex]);
 	}
-	coolTime = 0.2;
+	coolTime = noteCoolTime[player_noteIndex];
+}
+
+//ダメージ処理
+void Player::Hit(int damege)
+{
+	HP -= damege;
 }
 
 void Player::Render(RenderContext& rc)

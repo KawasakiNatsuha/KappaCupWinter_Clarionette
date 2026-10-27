@@ -10,7 +10,7 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 	void BulletMove();
-	void Fire(const Vector3& pos, const Vector3& dir);
+	void Fire(const Vector3& pos, const Vector3& dir,int attack);
 	void Hit();
 
 	//移動する方向
@@ -43,5 +43,8 @@ private:
 
 	//敵との衝突判定用
 	Enemy* enemy;
+
+	//攻撃力
+	int Attack = 5;
 };
 

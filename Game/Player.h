@@ -4,6 +4,7 @@
 
 class PlatformManeger;
 class FaseTime;
+class Enemy;
 
 class Player:public IGameObject
 	
@@ -17,6 +18,7 @@ public:
 	void ManagePlayerState();
 	void PlayerAnimetion();
 	void PlayerAttack();
+	void Hit(int damege);
 	
 
 	//メンバ変数。
@@ -51,9 +53,17 @@ public:
 
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
-	float noteCoolTime[2];
+	float noteCoolTime[2] =
+	{
+		0.2,0.05
+	};
 	//その時のクールタイム。
 	float coolTime;
+	//音符の種類に応じた攻撃力。
+	int noteAttack[2] =
+	{
+		5,1
+	};
 
 	GameTime gametime;
 
@@ -76,5 +86,7 @@ private:
 	Vector3 buckPosition;		//落下したとき戻る座標
 
 	int fallCount = 0;			//連続落下した回数(3回以上で初期の足場に戻る)
+
+	int HP = 100;				//playerのHP
 };
 
