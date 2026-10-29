@@ -75,13 +75,13 @@ void Bullet::Hit()
 		enemyUp.y += 70.0f;
 		Vector3 diffUp = bulletPos - enemyUp;
 		//弾が当たり判定の内部に行ったら
-		if (diff.Length() <= 100.0f)
+		if (diff.Length() <= 40.0f)
 		{
 			//memo::仮で10ダメージ
 			enemy->OnHit(10);
 			Deactivate();
 		}
-		else if (diffUp.Length() <= 100.0f)
+		else if (diffUp.Length() <= 40.0f)
 		{
 			//memo::仮で10ダメージ
 			enemy->OnHit(10);

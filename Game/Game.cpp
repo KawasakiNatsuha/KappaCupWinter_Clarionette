@@ -18,7 +18,7 @@ bool Game::Start()
 	NewGO<FaseTime>(0, "faseTime");
 
 	//テスト用初期化
-	enemy->Init(100, 10, 0.1f, 10.0f);
+	enemy->Init(100, 10, 0.1f, 100.0f,1.0f);
 
 	//初期足場
 	platform = NewGO<Platform>(0, "platform");
