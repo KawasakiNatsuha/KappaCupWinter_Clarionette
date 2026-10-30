@@ -27,7 +27,7 @@ public:
 
 private:
 	//足場のモデル(memo::とりあえず1個)
-	ModelRender note[1];
+	ModelRender note[3];
 
 	PhysicsStaticObject noteObject;
 	FaseTime* faseTime;

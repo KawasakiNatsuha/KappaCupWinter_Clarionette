@@ -42,7 +42,6 @@ void Player::Update()
 		platformManeger = NewGO<PlatformManeger>(0, "platformmaneger");
 		//現在のモデルの形状を教える
 		platformManeger->noteGorIndex = player_noteIndex;
-		platformManeger->platformIndex = platformIndex;
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
@@ -112,7 +111,6 @@ void Player::PlayerModeChange(PlayerMode playermode)
 		platformManeger = NewGO<PlatformManeger>(0, "platformmaneger");
 		//現在のモデルの形状を教える
 		platformManeger->noteGorIndex = player_noteIndex;
-		platformManeger->platformIndex = platformIndex;
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
@@ -243,6 +241,7 @@ void Player::PlayerMove()
 			position.z = 0.0f;
 		}
 
+		Hit(5);
 		characterController.SetPosition(position);
 	}
 
@@ -346,6 +345,7 @@ void Player::PlayerAttack()
 {
 	//カメラの前方向
 	Vector3 m_forward = g_camera3D->GetForward();
+	m_forward.y += 0.3f;
 	m_forward.Normalize();
 	//プレイヤーの座標からちょっとだけ上方向(弾が出てくる場所)
 	Vector3 m_shotPos = { position.x, position.y + 70.0f, position.z };
@@ -353,6 +353,7 @@ void Player::PlayerAttack()
 
 	if (bullet != nullptr)
 	{
+		m_forward.Normalize();
 		bullet->Fire(m_shotPos, m_forward,noteAttack[player_noteIndex]);
 	}
 	coolTime = noteCoolTime[player_noteIndex];

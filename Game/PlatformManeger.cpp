@@ -17,12 +17,11 @@ void PlatformManeger::PlatformManegerInit()
 {
 	//モデル読み込み
 	noteGor[0].IniTranslucent("Assets/modelData/note_quarterNote_Gor.tkm");
+	noteGor[1].IniTranslucent("Assets/modelData/note2_Gor.tkm");
+	noteGor[2].IniTranslucent("Assets/modelData/note3_Gor.tkm");
 
-	//初期化
-	if (noteGorIndex == 0)
-	{
-		rotX.SetRotationDegX(-90.0f);
-	}
+	//半透明モデル限定初期化
+	rotX.SetRotationDegX(-90.0f);
 	noteGor[noteGorIndex].SetScale(1.5f,1.5f, 1.5f);
 
 	noteGor[noteGorIndex].SetRotation(noteRotate);
@@ -93,7 +92,6 @@ void PlatformManeger::PlatformInstallation()
 	platform->noteRotate = rotY;
 	platform->Index = platformIndex;
 	platformIndex += 1;
-	player->platformIndex = platformIndex;
 	//引継ぎが終わったら足場の初期化作業
 	platform->InitPlatform();
 

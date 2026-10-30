@@ -49,20 +49,22 @@ public:
 	PlayerMode playerMode = attack;
 	void PlayerModeChange(PlayerMode playermode);
 
-	int platformIndex = 0;		//足場の出席番号(直前の足場を知るために使う)
+	int HP = 100;				//playerのHP
+	int MaxHP = 100;			//playerの最大HP
+	int player_noteIndex = 0;	//音符の形状
 
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
-	float noteCoolTime[2] =
+	float noteCoolTime[3] =
 	{
-		0.2,0.05
+		0.3,0.2,0.1
 	};
 	//その時のクールタイム。
 	float coolTime;
 	//音符の種類に応じた攻撃力。
-	int noteAttack[2] =
+	int noteAttack[3] =
 	{
-		5,1
+		5,3,1
 	};
 
 	GameTime gametime;
@@ -76,9 +78,6 @@ private:
 	EnButton switchButton = enButtonRB1;        //モード切替ボタン1。
 	EnButton switchButton2 = enButtonLB1;		//モード切替ボタン2。
 
-	//音符の形状
-	int player_noteIndex = 0;
-
 	FaseTime* faseTime;
 
 	bool isJump = false;		//二段ジャンプ用
@@ -86,7 +85,5 @@ private:
 	Vector3 buckPosition;		//落下したとき戻る座標
 
 	int fallCount = 0;			//連続落下した回数(3回以上で初期の足場に戻る)
-
-	int HP = 100;				//playerのHP
 };
 

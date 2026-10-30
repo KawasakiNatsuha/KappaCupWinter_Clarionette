@@ -16,6 +16,9 @@ void Platform::InitPlatform()
 {
 	//初期化
 	note[0].Init("Assets/modelData/note_quarterNote.tkm");
+	note[1].Init("Assets/modelData/note2.tkm");
+	note[2].Init("Assets/modelData/note3.tkm");
+
 	note[noteIndex].SetPosition(notePos);
 	note[noteIndex].SetRotation(noteRotate);
 	note[noteIndex].SetScale(1.5f, 1.5f, 1.5f);

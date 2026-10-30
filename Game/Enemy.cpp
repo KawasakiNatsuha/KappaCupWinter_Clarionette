@@ -8,7 +8,7 @@
 Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6)
 {
 	testModel.Init("Assets/modelData/unityChan.tkm");
-	Vector3 position = { 100.0f,100.0f,100.0f };
+	Vector3 position = { 100.0f,100.0f,500.0f };
 	testModel.SetPosition(position);
 
 	//オブジェクトプールの初期化
@@ -18,6 +18,7 @@ Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6)
 void Enemy::Init(int hp, int attack, float CoolTime, float MoveSpeed, float ChangeMoveModeTime)
 {
 	EnemyHP = hp;
+	EnemyMaxHP = hp;
 	AttackPower = attack;
 	coolTime = CoolTime;
 	moveSpeed = MoveSpeed;
@@ -163,7 +164,7 @@ void Enemy::Move()
 		position += movePosition * moveSpeed * deltaTime;
 	}
 
-	position.x = 50.0f;
+	position.x = 100.0f;
 	if (position.y < 0.0f)
 	{
 		position.y = 0.0f;

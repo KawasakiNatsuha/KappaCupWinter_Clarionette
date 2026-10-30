@@ -21,11 +21,12 @@ public:
 	void Init(int hp, int attack, float CoolTime,float MoveSpeed,float ChangeMoveModeTime);
 
 	//座標
-	Vector3 position = { 50.0f,0.0f,50.0f };
+	Vector3 position;
 	//当たり判定の範囲
 	float collisionRadius = 30.0f;
 
 	int EnemyHP = 100;						//HP
+	int EnemyMaxHP = 100;					//最大HP
 	int AttackPower = 5;					//攻撃力
 	float coolTime = 0.1;					//クールタイム
 	float nowCoolTime = 0;					//現在のクールタイム

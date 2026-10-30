@@ -1,6 +1,7 @@
 #pragma once
 
 class Enemy;
+class UI;
 
 class Bullet:public IGameObject
 {
@@ -43,6 +44,8 @@ private:
 
 	//敵との衝突判定用
 	Enemy* enemy;
+	//エフェクト表示用
+	UI* ui;
 
 	//攻撃力
 	int Attack = 5;

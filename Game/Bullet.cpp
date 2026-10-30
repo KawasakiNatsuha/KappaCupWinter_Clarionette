@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "UI.h"
 
 Bullet::Bullet()
 {
@@ -31,6 +32,8 @@ void Bullet::Update()
 	{
 		return;
 	}
+
+	ui = FindGO<UI>("ui");
 
 	BulletMove();
 	Hit();
@@ -77,14 +80,14 @@ void Bullet::Hit()
 		//弾が当たり判定の内部に行ったら
 		if (diff.Length() <= 40.0f)
 		{
-			//memo::仮で10ダメージ
-			enemy->OnHit(10);
+			enemy->OnHit(Attack);
+			ui->PlayEffects(1, enemyUp);
 			Deactivate();
 		}
 		else if (diffUp.Length() <= 40.0f)
 		{
-			//memo::仮で10ダメージ
-			enemy->OnHit(10);
+			enemy->OnHit(Attack);
+			ui->PlayEffects(1, enemyUp);
 			Deactivate();
 		}
 	}

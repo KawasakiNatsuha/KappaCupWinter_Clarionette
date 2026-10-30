@@ -2,7 +2,7 @@
 #include "FaseTime.h"
 #include "Player.h"
 
-FaseTime::FaseTime()
+FaseTime::FaseTime() :gen(std::random_device{}()), notemode(0, 2)
 {
 
 }
@@ -26,6 +26,7 @@ void FaseTime::Update()
 	}
 
 	//タイマー0でフェーズ切り替え
+	//攻撃フェーズ→回避フェーズ
 	if (nowFase == attackFase && faseTimer <= 0)
 	{
 		faseTimer = firstTime;
@@ -36,12 +37,18 @@ void FaseTime::Update()
 		}
 		nowFase = evadeFase;
 	}
+	//回避フェーズ→攻撃フェーズ
 	if (nowFase == evadeFase && faseTimer <= 0)
 	{
 		faseTimer = firstTime;
 		//攻撃フェーズに戻るとき、ターン+1
 		TurnCount += 1;
 		nowFase = attackFase;
+
+		//ここで音符の抽選
+		int Index = notemode(gen);
+		//memo::今は直接渡してるけど将来的には三つの選択肢の中から選ばせたい
+		player->player_noteIndex = Index;
 	}
 
 	//memo::残り時間表示
