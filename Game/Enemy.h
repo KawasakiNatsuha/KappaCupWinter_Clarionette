@@ -5,6 +5,7 @@
 
 class FaseTime;
 class Player;
+class UI;
 
 class Enemy:public IGameObject
 {
@@ -43,6 +44,7 @@ private:
 
 	FaseTime* faseTime;
 	Player* player;
+	UI* ui;
 	GameTime gametime;
 
 	FontRender fontRender;
@@ -73,6 +75,8 @@ private:
 	std::mt19937 gen;
 	//回避モード
 	std::uniform_int_distribution<int> mode;
+	//弾のブレ
+	std::uniform_int_distribution<int> offset;
 
 	//1フレームの経過時間
 	float deltaTime;

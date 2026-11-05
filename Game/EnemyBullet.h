@@ -1,6 +1,7 @@
 #pragma once
 
 class Player;
+class FaseTime;
 
 class EnemyBullet :public IGameObject
 {
@@ -34,6 +35,8 @@ private:
 
 	//敵との衝突判定用
 	Player* player;
+	//弾の一括削除用
+	FaseTime* faseTime;
 
 	//攻撃力
 	int Attack = 5;

@@ -14,6 +14,7 @@ public:
 	void GageUpdate();					//HPゲージの更新
 	void FontUI(RenderContext& rc);		//数字フォントの表示
 	void ChangePhase();
+	void ChangeAction();
 
 	//画像読み込みをコンストラクタですると絶対ごちゃつくのでここで代用。
 	void InitUI();
@@ -21,9 +22,15 @@ public:
 	/// <summary>
 	/// エフェクトの再生。
 	/// </summary>
-	/// <param name="effectNumber">再生したいエフェクトの番号。1=敵に音符が当たった際のエフェクト</param>
+	/// <param name="effectNumber">再生したいエフェクトの番号。1=敵に音符が当たった際のエフェクト/2=ステージの限界点に到達した際のエフェクト</param>
 	/// <param name="position">エフェクトを表示する座標</param>
-	void PlayEffects(int effectNumber, Vector3 position);
+	/// <param name="rotate">座標限界の時のみ使う。1でX軸回転、2でY軸回転となる</param>
+	void PlayEffects(int effectNumber, Vector3 position, int rotate = 0);
+
+	//フェーズ切り替え演出中かどうか
+	bool IsChange = false;
+
+	int PhaseIndex;
 
 private:
 	/// インゲーム中のUI。0は画面全体の固定UI、1は自分のHPバー、2は敵のHPバー。
@@ -37,10 +44,17 @@ private:
 
 	//ここからエフェクト
 	Effect HitEfeccts;
+	Effect RimitEffects;
+
+	//エフェクトの角度
+	Quaternion EfectRotate;
+
+	Vector3 position;
+	float startPosition = 1000.0f;
+	float endPosition = 0.0f;
+	float easingRadio;
+	float stopTime = 1.5f;
 
 	FaseTime* faseTime;
-
-	//フェーズ切り替え演出中かどうか
-	bool IsChange = false;
 };
 

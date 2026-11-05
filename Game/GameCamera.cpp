@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "Player.h"
+#include "UI.h"
 
 GameCamera::GameCamera()
 {
@@ -33,6 +34,13 @@ bool GameCamera::Start()
 }
 void GameCamera::Update()
 {
+	ui = FindGO<UI>("ui");
+
+	if (ui->IsChange == true)
+	{
+		return;
+	}
+
 	//カメラを更新。
 
 	g_camera3D->SetNear(1.0f);

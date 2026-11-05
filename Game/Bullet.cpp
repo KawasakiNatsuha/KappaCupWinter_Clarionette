@@ -2,10 +2,13 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "UI.h"
+#include "FaseTime.h"
 
 Bullet::Bullet()
 {
-	debugBullet.Init("Assets/modelData/Bullet.tkm");
+	bulletModel[0].Init("Assets/modelData/bullet1.tkm");
+	bulletModel[1].Init("Assets/modelData/bullet2.tkm");
+	bulletModel[2].Init("Assets/modelData/bullet3.tkm");
 }
 
 Bullet::~Bullet()
@@ -13,14 +16,16 @@ Bullet::~Bullet()
 
 }
 
-void Bullet::Fire(const Vector3& pos, const Vector3& dir,int attack)
+//初期化
+void Bullet::Fire(const Vector3& pos, const Vector3& dir,int attack,int bulletNumber)
 {
 	bulletPos = pos;
 	bulletMoveVec = dir;
 	m_startPos = pos;
 	Attack = attack;
+	BulletNumber = bulletNumber;
 
-	debugBullet.SetPosition(bulletPos);
+	bulletModel[BulletNumber].SetPosition(bulletPos);
 
 	Activate();
 }
@@ -34,10 +39,16 @@ void Bullet::Update()
 	}
 
 	ui = FindGO<UI>("ui");
+	faseTime = FindGO<FaseTime>("faseTime");
+
+	if (faseTime->nowFase == FaseTime::Fase::evadeFase)
+	{
+		Deactivate();
+	}
 
 	BulletMove();
 	Hit();
-	debugBullet.Update();
+	bulletModel[BulletNumber].Update();
 }
 
 void Bullet::Render(RenderContext& rc)
@@ -47,7 +58,7 @@ void Bullet::Render(RenderContext& rc)
 		return;
 	}
 
-	debugBullet.Draw(rc);
+	bulletModel[BulletNumber].Draw(rc);
 }
 
 void Bullet::BulletMove()
@@ -55,7 +66,7 @@ void Bullet::BulletMove()
 	//フレームごとの経過時間
 	float deltaTime = gameTime.GetFrameDeltaTime();
 	bulletPos += bulletMoveVec * bulletMoveSpeed * deltaTime;
-	debugBullet.SetPosition(bulletPos);
+	bulletModel[BulletNumber].SetPosition(bulletPos);
 
 	// 発射地点から一定距離を飛んだら再利用可能にする
 	Vector3 diff = bulletPos - m_startPos;

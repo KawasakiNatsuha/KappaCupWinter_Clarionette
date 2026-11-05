@@ -2,6 +2,7 @@
 
 class Enemy;
 class UI;
+class FaseTime;
 
 class Bullet:public IGameObject
 {
@@ -11,7 +12,7 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 	void BulletMove();
-	void Fire(const Vector3& pos, const Vector3& dir,int attack);
+	void Fire(const Vector3& pos, const Vector3& dir,int attack,int bulletNumber);
 	void Hit();
 
 	//移動する方向
@@ -28,11 +29,16 @@ public:
 		quarterNote,
 		//八分音符
 		eighthNote,
+		//連符
+		duplet,
 	};
 
+	noteState BulletKind;
+	int BulletNumber;
+
 private:
-	//デバッグ用のモデル
-	ModelRender debugBullet;
+	//弾のモデル
+	ModelRender bulletModel[3];
 
 	GameTime gameTime;
 
@@ -46,6 +52,8 @@ private:
 	Enemy* enemy;
 	//エフェクト表示用
 	UI* ui;
+	//弾の一括削除用
+	FaseTime* faseTime;
 
 	//攻撃力
 	int Attack = 5;

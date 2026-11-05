@@ -5,6 +5,8 @@
 class PlatformManeger;
 class FaseTime;
 class Enemy;
+class UI;
+class Game;
 
 class Player:public IGameObject
 	
@@ -79,11 +81,15 @@ private:
 	EnButton switchButton2 = enButtonLB1;		//モード切替ボタン2。
 
 	FaseTime* faseTime;
+	UI* ui;
+	Game* game;
 
 	bool isJump = false;		//二段ジャンプ用
 
 	Vector3 buckPosition;		//落下したとき戻る座標
 
 	int fallCount = 0;			//連続落下した回数(3回以上で初期の足場に戻る)
+	bool inDamage = false;		//ダメージ後の無敵時間中か
+	float invincibleTime = 3.0f;	//無敵時間
 };
 

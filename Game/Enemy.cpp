@@ -4,11 +4,12 @@
 #include "Player.h"
 #include "EnemyBullet.h"
 #include "Bullet.h"
+#include "UI.h"
 
-Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6)
+Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6), offset(-100, 100)
 {
 	testModel.Init("Assets/modelData/unityChan.tkm");
-	Vector3 position = { 100.0f,100.0f,500.0f };
+	Vector3 position = { 100.0f,100.0f,1000.0f };
 	testModel.SetPosition(position);
 
 	//オブジェクトプールの初期化
@@ -33,6 +34,13 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
+	ui = FindGO<UI>("ui");
+
+	if (ui->IsChange == true)
+	{
+		return;
+	}
+
 	faseTime = FindGO<FaseTime>("faseTime");
 
 	deltaTime = g_gameTime->GetFrameDeltaTime();
@@ -84,12 +92,6 @@ void Enemy::Update()
 		rot *= offsetRot;
 		testModel.SetRotation(rot);
 	}
-
-	//memo::敵のHP表示
-	swprintf_s(font, L"敵HP: %d", EnemyHP);
-	fontRender.SetText(font);
-	fontRender.SetPosition({ -130.0f,500.0f,0.0f });
-	fontRender.SetColor(g_vec4White);
 }
 
 void Enemy::OnHit(int damage)
@@ -102,8 +104,10 @@ void Enemy::Attack(int attackPower)
 {
 	player = FindGO<Player>("player"); 
 	Vector3 diff = position - player->position;
+	diff.x += (float)offset(gen);
+	diff.y += (float)offset(gen);
 	diff.Normalize();
-	//プレイヤーの座標からちょっとだけ上方向(弾が出てくる場所)
+	//エネミーの座標からちょっとだけ上方向(弾が出てくる場所)
 	Vector3 m_shotPos = { position.x, position.y + 70.0f, position.z };
 	EnemyBullet* enemyBullet = m_bulletPool.GetInactive(false);
 
@@ -123,10 +127,10 @@ void Enemy::Move()
 		switch (moveMode)
 		{
 		case Enemy::left:
-			position.z -= moveSpeed * deltaTime;
+			position.x -= moveSpeed * deltaTime;
 			break;
 		case Enemy::right:
-			position.z += moveSpeed * deltaTime;
+			position.x += moveSpeed * deltaTime;
 			break;
 		case Enemy::up:
 			position.y += moveSpeed * deltaTime;
@@ -164,22 +168,22 @@ void Enemy::Move()
 		position += movePosition * moveSpeed * deltaTime;
 	}
 
-	position.x = 100.0f;
+	position.z = 1000.0f;
 	if (position.y < 0.0f)
 	{
 		position.y = 0.0f;
 	}
-	if (position.y > 500.0f)
+	if (position.y > 1000.0f)
 	{
-		position.y = 500.0f;
+		position.y = 1000.0f;
 	}
-	if (position.x > 500.0f)
+	if (position.x > 1000.0f)
 	{
-		position.x = 500.0f;
+		position.x = 1000.0f;
 	}
-	if (position.x < -500.0f)
+	if (position.x < -1000.0f)
 	{
-		position.x = 500.0f;
+		position.x = 1000.0f;
 	}
 
 	testModel.SetPosition(position);

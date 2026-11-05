@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EnemyBullet.h"
 #include "Player.h"
+#include "FaseTime.h"
 
 EnemyBullet::EnemyBullet()
 {
@@ -29,6 +30,13 @@ void EnemyBullet::Update()
 	// 使用中でなければ処理しない
 	if (IsActive()==true)
 	{
+		faseTime = FindGO<FaseTime>("faseTime");
+
+		if (faseTime->nowFase==Player::PlayerMode::attack)
+		{
+			Deactivate();
+		}
+
 		BulletMove();
 		Hit();
 		debugBullet.Update();

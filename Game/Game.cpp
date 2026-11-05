@@ -14,7 +14,7 @@ bool Game::Start()
 	//memo::まずは最初のテストプレイ用
 	NewGO<Player>(0, "player");
 	NewGO<GameCamera>(0, "gamecamera");
-	//NewGO<DebugStage>(0, "debugstage");
+	NewGO<DebugStage>(0, "debugstage");
 	Enemy* enemy = NewGO<Enemy>(0, "enemy");
 	NewGO<FaseTime>(0, "faseTime");
 	UI* ui = NewGO<UI>(0, "ui");
@@ -34,19 +34,18 @@ bool Game::Start()
 	skyCube->SetScale(5000.0f);
 	g_renderingEngine->SetAmbientByIBLTexture(skyCube->GetTextureFilePath(), 0.5f);
 
-	//modelRender.Init("Assets/modelData/Sop.tkm");
-
 	return true;
 }
 
 void Game::Update()
 {
-
+	/*modelRender.PlayAnimation(enAnimationClip_Idle);
+	modelRender.Update();*/
 }
 
 void Game::Render(RenderContext& rc)
 {
-	//modelRender.Draw(rc);
+	/*modelRender.Draw(rc);*/
 }
 
 void Game::Blinking(float interval, ModelRender& model, RenderContext& rc)

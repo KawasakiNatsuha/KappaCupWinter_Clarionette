@@ -8,13 +8,19 @@ UI::UI()
 {
 	//ここからエフェクト
 	EffectEngine::GetInstance()->ResistEffect(0, u"Assets/efecct/Damege_note.efkefc");
+	EffectEngine::GetInstance()->ResistEffect(1,u"Assets/efecct/StageRimit.efkefc");
 	HitEfeccts.Init(0);
 	HitEfeccts.SetScale(Vector3(30.0f, 30.0f, 0.0f));
+	RimitEffects.Init(1);
 
 	InGameUI[1].SetPosition({ -960.0f,0.0f,0.0f });
 	InGameUI[2].SetPosition({ 960.0f,0.0f,0.0f });
 	InGameUI[1].SetPivot(Vector2(0.0f, 0.5f));
 	InGameUI[2].SetPivot(Vector2(1.0f, 0.5f));
+
+	position.y = 1000.0f;
+	ChangePhaseUI[0].SetPosition(position);
+	ChangePhaseUI[1].SetPosition(position);
 }
 
 UI::~UI()
@@ -54,9 +60,16 @@ void UI::Update()
 	//HPバーを動かす
 	GageUpdate();
 
+	if (IsChange == true)
+	{
+		ChangeAction();
+	}
+
 	HitEfeccts.Update();
 	InGameUI[1].Update();
 	InGameUI[2].Update();
+	ChangePhaseUI[0].Update();
+	ChangePhaseUI[1].Update();
 }
 
 void UI::GageUpdate()
@@ -114,7 +127,7 @@ void UI::FontUI(RenderContext& rc)
 	NumberFont[one].Draw(rc);
 }
 
-void UI::PlayEffects(int effectNumber, Vector3 position)
+void UI::PlayEffects(int effectNumber, Vector3 position, int rotate)
 {
 	switch (effectNumber)
 	{
@@ -122,6 +135,18 @@ void UI::PlayEffects(int effectNumber, Vector3 position)
 		HitEfeccts.SetPosition(position);
 		HitEfeccts.Play();
 		break;
+	case 2:
+		RimitEffects.SetPosition(position);
+		if (rotate == 1)
+		{
+			EfectRotate.AddRotationDegX(90.0f);
+		}
+		if (rotate == 2)
+		{
+			EfectRotate.AddRotationDegY(90.0f);
+		}
+		RimitEffects.SetRotation(EfectRotate);
+		RimitEffects.Play();
 	default:
 		break;
 	}
@@ -130,6 +155,50 @@ void UI::PlayEffects(int effectNumber, Vector3 position)
 void UI::ChangePhase()
 {
 	IsChange = true;
+}
+
+void UI::ChangeAction()
+{
+	if (position.y >= endPosition)
+	{
+		easingRadio = startPosition - position.y / 100;
+		if (easingRadio > 0.0f)
+		{
+			position.y -= 0.05f * easingRadio;
+		}
+		else
+		{
+			easingRadio = 1.0f;
+		}
+	}
+
+	ChangePhaseUI[PhaseIndex].SetPosition(position);
+
+	if (position.y <= endPosition)
+	{
+		stopTime -= g_gameTime->GetFrameDeltaTime();
+
+		if (stopTime <= 0.0f)
+		{
+			easingRadio = startPosition - position.y / 100;
+			if (easingRadio > 0.0f)
+			{
+				position.y -= 0.05f * easingRadio;
+			}
+			else
+			{
+				easingRadio = 1.0f;
+			}
+			
+			if (position.y <= -1000.0f)
+			{
+				position.y = 1000.0f;
+				ChangePhaseUI[PhaseIndex].SetPosition(position);
+				stopTime = 1.5f;
+				IsChange = false;
+			}
+		}
+	}
 }
 
 void UI::Render(RenderContext& rc)
@@ -142,20 +211,16 @@ void UI::Render(RenderContext& rc)
 	if (faseTime->nowFase == Player::PlayerMode::attack)
 	{
 		PhaseUI[0].Draw(rc);
-		if (IsChange == true)
-		{
-			ChangePhaseUI[1].Draw(rc);
-		}
 	}
 	else
 	{
 		PhaseUI[1].Draw(rc);
-		if (IsChange == true)
-		{
-			ChangePhaseUI[0].Draw(rc);
-		}
+	}
 
-		//備忘録::次はフェーズ切り替え時の演出を作るよ
+	//フェーズ切り替え演出
+	if (IsChange == true)
+	{
+		ChangePhaseUI[PhaseIndex].Draw(rc);
 	}
 
 	//数字の更新

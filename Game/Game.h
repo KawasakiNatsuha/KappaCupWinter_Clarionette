@@ -15,6 +15,14 @@ private:
 
 	//お試し
 	ModelRender modelRender;
+	enum EnAnimationClip {		//アニメーション。
+		enAnimationClip_Idle,
+		enAnimationClip_Walk,
+		enAnimationClip_Jump,
+		enAnimationClip_Run,
+		enAnimationClip_Num,
+	};
+	AnimationClip animationClips[1];
 
 	GameTime gameTime;
 	float deltaTime;		//1フレームの経過時間(点滅処理用)

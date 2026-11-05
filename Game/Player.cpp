@@ -7,30 +7,41 @@
 #include "PlatformManeger.h"
 #include "FaseTime.h"
 #include "Enemy.h"
+#include "UI.h"
+#include "Game.h"
 
 Player::Player()
 {
 	//アニメーションクリップをロードする。
-	animationClips[enAnimationClip_Idle].Load("Assets/animData/idle.tka");
+	animationClips[enAnimationClip_Idle].Load("Assets/animData/Sop_idle.tka");
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
-	animationClips[enAnimationClip_Walk].Load("Assets/animData/walk.tka");
+	animationClips[enAnimationClip_Walk].Load("Assets/animData/Sop_walk.tka");
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);
-	animationClips[enAnimationClip_Jump].Load("Assets/animData/jump.tka");
+	animationClips[enAnimationClip_Jump].Load("Assets/animData/Sop_jump2.tka");
 	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
-	animationClips[enAnimationClip_Run].Load("Assets/animData/run.tka");
+	animationClips[enAnimationClip_Run].Load("Assets/animData/Sop_run.tka");
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
 	//ユニティちゃんのモデルを読み込む。
-	modelRender.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
+	modelRender.Init("Assets/modelData/Sop4.tkm", animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
 	//キャラコンを初期化する。
 	characterController.Init(25.0f, 75.0f, position);
 
 	//オブジェクトプールの初期化
 	m_bulletPool.Init(50, "bullet");
+
+	game = FindGO<Game>("game");
 }
 
 void Player::Update()
 {
+	ui = FindGO<UI>("ui");
+
+	if (ui->IsChange == true)
+	{
+		return;
+	}
+
 	//PlatformManegerがあるかどうか見る
 	platformManeger = FindGO<PlatformManeger>("platformmaneger");
 	//現在のフェーズを確認する
@@ -45,7 +56,6 @@ void Player::Update()
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
-	
 	
 	PlayerMove();
 	PlayerRotate();
@@ -245,6 +255,33 @@ void Player::PlayerMove()
 		characterController.SetPosition(position);
 	}
 
+	//移動の限界(限界値になるとエフェクト再生)
+	if (position.y > 1000.0f)
+	{
+		position.y = 1000.0f;
+		ui->PlayEffects(2, position + Vector3{ 0.0f,30.0f,0.0f },1);
+	}
+	/*if (position.x > 1000.0f)
+	{
+		position.x = 1000.0f;
+		ui->PlayEffects(2, position + Vector3{ 30.0f,0.0f,0.0f });
+	}
+	if (position.x < -1000.0f)
+	{
+		position.x = 1000.0f;
+		ui->PlayEffects(2, position - Vector3{ 3.0f,30.0f,0.0f });
+	}*/
+	if (position.z > 1000.0f)
+	{
+		position.z = 1000.0f;
+		ui->PlayEffects(2, position + Vector3{ 0.0f,0.0f,30.0f },2);
+	}
+	if (position.z < -1000.0f)
+	{
+		position.z = 1000.0f;
+		ui->PlayEffects(2, position - Vector3{ 0.0f,0.0f,30.0f }, 2);
+	}
+
 	//絵描きさんに座標を教える。
 	modelRender.SetPosition(position);
 }
@@ -345,7 +382,7 @@ void Player::PlayerAttack()
 {
 	//カメラの前方向
 	Vector3 m_forward = g_camera3D->GetForward();
-	m_forward.y += 0.3f;
+	m_forward.y += 0.2f;
 	m_forward.Normalize();
 	//プレイヤーの座標からちょっとだけ上方向(弾が出てくる場所)
 	Vector3 m_shotPos = { position.x, position.y + 70.0f, position.z };
@@ -354,7 +391,7 @@ void Player::PlayerAttack()
 	if (bullet != nullptr)
 	{
 		m_forward.Normalize();
-		bullet->Fire(m_shotPos, m_forward,noteAttack[player_noteIndex]);
+		bullet->Fire(m_shotPos, m_forward,noteAttack[player_noteIndex],player_noteIndex);
 	}
 	coolTime = noteCoolTime[player_noteIndex];
 }
@@ -362,10 +399,43 @@ void Player::PlayerAttack()
 //ダメージ処理
 void Player::Hit(int damege)
 {
-	HP -= damege;
+	if (inDamage == false)
+	{
+		HP -= damege;
+		invincibleTime = 3.0f;
+		inDamage = true;
+	}
 }
 
 void Player::Render(RenderContext& rc)
 {
-	modelRender.Draw(rc);
+	//無敵時間中なら点滅
+	if (inDamage == true)
+	{
+		//点滅処理
+		if (invincibleTime >= 2.5f)
+		{
+			game->Blinking(0.1f, modelRender, rc);
+		}
+		else if (invincibleTime >= 0.5f)
+		{
+			game->Blinking(0.07f, modelRender, rc);
+		}
+		else
+		{
+			game->Blinking(0.05f, modelRender, rc);
+		}
+		invincibleTime -= g_gameTime->GetFrameDeltaTime();
+
+		//無敵時間終了後
+		if (invincibleTime <= 0.0f)
+		{
+			inDamage = false;
+		}
+	}
+	//それ以外は常時描画
+	else
+	{
+		modelRender.Draw(rc);
+	}
 }
