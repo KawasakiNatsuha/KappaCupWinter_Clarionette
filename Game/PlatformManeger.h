@@ -22,8 +22,8 @@ public:
 
 private:
 
-	//設置予定位置に表示させる半透明モデル(memo::とりあえず一個)
-	ModelRender noteGor[3];
+	//設置予定位置に表示させる半透明モデル
+	ModelRender noteGor[5];
 
 	//半透明モデルの位置
 	Vector3 noteGorPos;

@@ -36,6 +36,12 @@ public:
 	noteState BulletKind;
 	int BulletNumber;
 
+	//攻撃力
+	int Attack = 5;
+
+	//二分休符に強化されたか
+	bool IsBuff = false;
+
 private:
 	//弾のモデル
 	ModelRender bulletModel[3];
@@ -54,8 +60,5 @@ private:
 	UI* ui;
 	//弾の一括削除用
 	FaseTime* faseTime;
-
-	//攻撃力
-	int Attack = 5;
 };
 

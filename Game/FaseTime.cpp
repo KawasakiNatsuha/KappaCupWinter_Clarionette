@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "UI.h"
 
-FaseTime::FaseTime() :gen(std::random_device{}()), notemode(0, 2)
+FaseTime::FaseTime() :gen(std::random_device{}()), notemode(0, 4)
 {
 	
 }
@@ -58,10 +58,24 @@ void FaseTime::Update()
 		TurnCount += 1;
 		nowFase = attackFase;
 
-		//ここで音符の抽選
-		int Index = notemode(gen);
-		//memo::今は直接渡してるけど将来的には三つの選択肢の中から選ばせたい
-		player->player_noteIndex = Index;
+
+		while (true)
+		{
+			//ここで音符の抽選
+			nowNoteIndex[0] = notemode(gen);
+			nowNoteIndex[1] = notemode(gen);
+
+			if (nowNoteIndex[0] != nowNoteIndex[1])
+			{
+				nowNoteIndex[2] = notemode(gen);
+
+				//全部違う数値にできたらループ脱出
+				if (nowNoteIndex[0] != nowNoteIndex[2] && nowNoteIndex[1] != nowNoteIndex[2])
+				{
+					break;
+				}
+			}
+		}
 	}
 }
 

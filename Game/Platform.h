@@ -2,6 +2,8 @@
 #include "Game.h"
 
 class FaseTime;
+class Bullet;
+class EnemyBullet;
 
 //足場のオブジェクトクラス(インスタンスで増殖する方)
 class Platform:public IGameObject
@@ -12,9 +14,10 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 	void InitPlatform();
+	void Hit(int Index);
 
 	//この足場の座標
-	Vector3 notePos;
+	Vector3 notePos = { 0.0f,0.0f,0.0f };
 
 	//実際に表示するモデル番号(配列からモデルを表示させるのに使う)
 	int noteIndex;
@@ -26,14 +29,17 @@ public:
 	int Index;
 
 private:
-	//足場のモデル(memo::とりあえず1個)
+	//足場のモデル
 	ModelRender note[3];
 
 	PhysicsStaticObject noteObject;
 	FaseTime* faseTime;
+	Bullet* bullet;
+	EnemyBullet* enemyBullet;
 	Game game;
 
 	int crieteFase;		//作られたフェーズ
 	int dethFase = 5;		//足場の寿命
+	int platformHP = 50;	//四分休符の耐久値
 };
 

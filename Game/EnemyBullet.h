@@ -21,6 +21,9 @@ public:
 	//弾の移動速度
 	float bulletMoveSpeed = 550.0f;
 
+	//攻撃力
+	int Attack = 5;
+
 private:
 	//デバッグ用のモデル
 	ModelRender debugBullet;
@@ -37,9 +40,6 @@ private:
 	Player* player;
 	//弾の一括削除用
 	FaseTime* faseTime;
-
-	//攻撃力
-	int Attack = 5;
 };
 
 

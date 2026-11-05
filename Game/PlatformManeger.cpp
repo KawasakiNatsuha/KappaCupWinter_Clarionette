@@ -19,12 +19,17 @@ void PlatformManeger::PlatformManegerInit()
 	noteGor[0].IniTranslucent("Assets/modelData/note_quarterNote_Gor.tkm");
 	noteGor[1].IniTranslucent("Assets/modelData/note2_Gor.tkm");
 	noteGor[2].IniTranslucent("Assets/modelData/note3_Gor.tkm");
+	noteGor[3].IniTranslucent("Assets/modelData/quarterRest_Gor.tkm");
+	noteGor[4].IniTranslucent("Assets/modelData/halfRest_Gor.tkm");
 
-	//半透明モデル限定初期化
-	rotX.SetRotationDegX(-90.0f);
-	noteGor[noteGorIndex].SetScale(1.5f,1.5f, 1.5f);
+	//半透明モデル限定初期化(ただし壁はそのまま)
+	if (noteGorIndex < 3)
+	{
+		rotX.SetRotationDegX(-90.0f);
+		noteGor[noteGorIndex].SetScale(1.5f, 1.5f, 1.5f);
 
-	noteGor[noteGorIndex].SetRotation(noteRotate);
+		noteGor[noteGorIndex].SetRotation(noteRotate);
+	}
 }
 
 void PlatformManeger::Update()

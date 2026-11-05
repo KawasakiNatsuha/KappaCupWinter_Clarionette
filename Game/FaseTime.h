@@ -21,6 +21,9 @@ public:
 	int TurnCount = 0;		//経過ターン
 	int faseTimer = 15;     //制限時間(変わる方)
 
+	//抽選された音符(三択)
+	int nowNoteIndex[3];
+
 private:
 	FontRender timeFont;
 	GameTime gameTime;

@@ -24,6 +24,7 @@ void Bullet::Fire(const Vector3& pos, const Vector3& dir,int attack,int bulletNu
 	m_startPos = pos;
 	Attack = attack;
 	BulletNumber = bulletNumber;
+	IsBuff = false;
 
 	bulletModel[BulletNumber].SetPosition(bulletPos);
 

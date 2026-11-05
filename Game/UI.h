@@ -27,6 +27,11 @@ public:
 	/// <param name="rotate">座標限界の時のみ使う。1でX軸回転、2でY軸回転となる</param>
 	void PlayEffects(int effectNumber, Vector3 position, int rotate = 0);
 
+	/// <summary>
+	/// カード抽選演出。
+	/// </summary>
+	void CardLottery();
+
 	//フェーズ切り替え演出中かどうか
 	bool IsChange = false;
 
@@ -39,8 +44,22 @@ private:
 	SpriteRender ChangePhaseUI[2];
 	//フェーズをわかりやすく表すためのUI。0はプレイヤー、1は敵のフェーズ時にうっすら表示するフィルター的なもの
 	SpriteRender PhaseUI[2];
-	/// ゲーム内フォント。とりあえず数字だけ。配列の数字と実際の画像の数字は一致させること。
+	// ゲーム内フォント。とりあえず数字だけ。配列の数字と実際の画像の数字は一致させること。
 	SpriteRender NumberFont[11];
+	//抽選時のカード。EXは裏面。
+	SpriteRender CardKind[3][6];
+	
+	//カードの座標。
+	Vector3 CardPos[3];
+	enum CardStep
+	{
+		move,		//上から降りてくる
+		stop,		//止まって裏返る
+		choose,		//選んでもらう
+		fadeOut		//選択後、消える
+	};
+
+	CardStep State;
 
 	//ここからエフェクト
 	Effect HitEfeccts;
@@ -54,6 +73,10 @@ private:
 	float endPosition = 0.0f;
 	float easingRadio;
 	float stopTime = 1.5f;
+	bool faseChanged = false;
+	Quaternion CardRot;
+	float rot;
+	bool StopCard[3] = { false };
 
 	FaseTime* faseTime;
 };

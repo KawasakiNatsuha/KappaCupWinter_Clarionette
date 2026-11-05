@@ -21,6 +21,10 @@ UI::UI()
 	position.y = 1000.0f;
 	ChangePhaseUI[0].SetPosition(position);
 	ChangePhaseUI[1].SetPosition(position);
+
+	CardPos[0] = { 600.0f,1000.0f,0.0f };
+	CardPos[1] = { 0.0f,1000.0f,0.0f };
+	CardPos[2] = { -600.0f,1000.0f,0.0f };
 }
 
 UI::~UI()
@@ -51,6 +55,16 @@ void UI::InitUI()
 	NumberFont[8].Init("Assets/sprite/8.DDS", 74.0f, 91.0f);
 	NumberFont[9].Init("Assets/sprite/9.DDS", 74.0f, 91.0f);
 	NumberFont[10].Init("Assets/sprite/1.DDS", 74.0f, 91.0f);
+
+	for (int i = 0;i < 3;i++)
+	{
+		CardKind[i][0].Init("Assets/sprite/Card1.DDS", 512.0f, 768.0f);
+		CardKind[i][1].Init("Assets/sprite/Card2.DDS", 512.0f, 768.0f);
+		CardKind[i][2].Init("Assets/sprite/Card3.DDS", 512.0f, 768.0f);
+		CardKind[i][3].Init("Assets/sprite/Card4.DDS", 512.0f, 768.0f);
+		CardKind[i][4].Init("Assets/sprite/Card5.DDS", 512.0f, 768.0f);
+		CardKind[i][5].Init("Assets/sprite/CardEX.DDS", 512.0f, 768.0f);
+	}
 }
 
 void UI::Update()
@@ -63,6 +77,11 @@ void UI::Update()
 	if (IsChange == true)
 	{
 		ChangeAction();
+	}
+
+	if (faseChanged == true)
+	{
+		CardLottery();
 	}
 
 	HitEfeccts.Update();
@@ -159,26 +178,9 @@ void UI::ChangePhase()
 
 void UI::ChangeAction()
 {
-	if (position.y >= endPosition)
+	if (faseChanged == false)
 	{
-		easingRadio = startPosition - position.y / 100;
-		if (easingRadio > 0.0f)
-		{
-			position.y -= 0.05f * easingRadio;
-		}
-		else
-		{
-			easingRadio = 1.0f;
-		}
-	}
-
-	ChangePhaseUI[PhaseIndex].SetPosition(position);
-
-	if (position.y <= endPosition)
-	{
-		stopTime -= g_gameTime->GetFrameDeltaTime();
-
-		if (stopTime <= 0.0f)
+		if (position.y >= endPosition)
 		{
 			easingRadio = startPosition - position.y / 100;
 			if (easingRadio > 0.0f)
@@ -189,15 +191,142 @@ void UI::ChangeAction()
 			{
 				easingRadio = 1.0f;
 			}
-			
-			if (position.y <= -1000.0f)
+		}
+
+		ChangePhaseUI[PhaseIndex].SetPosition(position);
+
+		if (position.y <= endPosition)
+		{
+			stopTime -= g_gameTime->GetFrameDeltaTime();
+
+			if (stopTime <= 0.0f)
 			{
-				position.y = 1000.0f;
-				ChangePhaseUI[PhaseIndex].SetPosition(position);
-				stopTime = 1.5f;
-				IsChange = false;
+				easingRadio = startPosition - position.y / 100;
+				if (easingRadio > 0.0f)
+				{
+					position.y -= 0.05f * easingRadio;
+				}
+				else
+				{
+					easingRadio = 1.0f;
+				}
+
+				if (position.y <= -1000.0f)
+				{
+					position.y = 1000.0f;
+					ChangePhaseUI[PhaseIndex].SetPosition(position);
+					stopTime = 1.5f;
+					faseChanged = true;
+				}
 			}
 		}
+	}
+}
+
+void UI::CardLottery()
+{
+	//アタックフェーズになったんならカード抽選イベント
+	if (faseTime->nowFase == Player::PlayerMode::attack)
+	{
+		//呼び出されたらカードが順番に上から降りてくる
+		switch (State)
+		{
+		case move:
+			//一枚目が降りてくる
+			CardPos[0].y -= 2500.0f * g_gameTime->GetFrameDeltaTime();
+			//二枚目が降りてくる
+			if (CardPos[0].y <= 100.0f)
+			{
+				CardPos[1].y -= 2500.0f * g_gameTime->GetFrameDeltaTime();
+				//三枚目が降りてくる
+				if (CardPos[1].y <= 100.0f)
+				{
+					CardPos[2].y -= 2500.0f * g_gameTime->GetFrameDeltaTime();
+				}
+			}
+			for (int i = 0;i < 3;i++)
+			{
+				//中央で止める
+				if (CardPos[i].y <= 0.0f)
+				{
+					CardPos[i].y = 0.0f;
+					StopCard[i] = true;
+				}
+
+				CardKind[i][5].SetPosition(CardPos[i]);
+				CardKind[i][5].Update();
+			}
+
+			//全部0.0f地点に到達したら
+			if (StopCard[0] == true && StopCard[1] == true && StopCard[2] == true)
+			{
+				State = stop;
+			}
+			break;
+		case stop:
+			//回転させていって
+			rot += 100.0f * g_gameTime->GetFrameDeltaTime();
+			if (rot >= 30.0f && rot <= 150.0f)
+			{
+				rot += 9000.0f * g_gameTime->GetFrameDeltaTime();
+				if (rot >= 50.0f && rot <= 90.0f)
+				{
+					rot += 5.0f;
+				}
+			}
+			CardRot.SetRotationDegY(rot);
+			//90度より大きくなったら
+			if (rot >= 90.0f)
+			{
+				//絵柄を変えてやる
+				for (int i = 0;i < 3;i++)
+				{
+					CardKind[i][faseTime->nowNoteIndex[i]].SetPosition(CardPos[i]);
+					CardKind[i][faseTime->nowNoteIndex[i]].SetRotation(CardRot);
+					CardKind[i][faseTime->nowNoteIndex[i]].Update();
+				}
+			}
+			else
+			{
+				for (int i = 0;i < 3;i++)
+				{
+					CardKind[i][5].SetRotation(CardRot);
+					CardKind[i][5].Update();
+				}
+			}
+
+			//そして180度回転したら次へ
+			if (rot >= 180.0f)
+			{
+				rot = 0.0f;
+				CardRot.SetRotationDegY(rot);
+				for (int i = 0;i < 3;i++)
+				{
+					CardKind[i][faseTime->nowNoteIndex[i]].SetPosition(CardPos[i]);
+					CardKind[i][faseTime->nowNoteIndex[i]].SetRotation(CardRot);
+					CardKind[i][faseTime->nowNoteIndex[i]].Update();
+				}
+				State = choose;
+			}
+			break;
+		case choose:
+			//memo::ここで弾を選択する回ですよ
+			for (int i = 0;i < 3;i++)
+			{
+				CardKind[i][faseTime->nowNoteIndex[i]].SetPosition(CardPos[i]);
+				CardKind[i][faseTime->nowNoteIndex[i]].Update();
+			}
+			break;
+		case fadeOut:
+			faseChanged = false;
+			IsChange = false;
+			break;
+		}
+	}
+	else
+	{
+		faseChanged = false;
+		IsChange = false;
 	}
 }
 
@@ -217,12 +346,43 @@ void UI::Render(RenderContext& rc)
 		PhaseUI[1].Draw(rc);
 	}
 
+	//数字の更新
+	FontUI(rc);
+
 	//フェーズ切り替え演出
 	if (IsChange == true)
 	{
 		ChangePhaseUI[PhaseIndex].Draw(rc);
 	}
 
-	//数字の更新
-	FontUI(rc);
+	if (faseChanged == true)
+	{
+		if (State == move)
+		{
+			CardKind[0][5].Draw(rc);
+			CardKind[1][5].Draw(rc);
+			CardKind[2][5].Draw(rc);
+		}
+		if (State == stop)
+		{
+			if (rot >= 90.0f)
+			{
+				CardKind[0][faseTime->nowNoteIndex[0]].Draw(rc);
+				CardKind[1][faseTime->nowNoteIndex[1]].Draw(rc);
+				CardKind[2][faseTime->nowNoteIndex[2]].Draw(rc);
+			}
+			else
+			{
+				CardKind[0][5].Draw(rc);
+				CardKind[1][5].Draw(rc);
+				CardKind[2][5].Draw(rc);
+			}
+		}
+		if (State == choose)
+		{
+			CardKind[0][faseTime->nowNoteIndex[0]].Draw(rc);
+			CardKind[1][faseTime->nowNoteIndex[1]].Draw(rc);
+			CardKind[2][faseTime->nowNoteIndex[2]].Draw(rc);
+		}
+	}
 }

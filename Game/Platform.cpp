@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Platform.h"
 #include "FaseTime.h"
+#include "Bullet.h"
+#include "EnemyBullet.h"
 
 Platform::Platform()
 {
@@ -18,6 +20,8 @@ void Platform::InitPlatform()
 	note[0].Init("Assets/modelData/note_quarterNote.tkm");
 	note[1].Init("Assets/modelData/note2.tkm");
 	note[2].Init("Assets/modelData/note3.tkm");
+	//note[3].Init("Assets/modelData/quarterRest.tkm");
+	//note[4].Init("Assets/modelData/halfRest.tkm");
 
 	note[noteIndex].SetPosition(notePos);
 	note[noteIndex].SetRotation(noteRotate);
@@ -32,10 +36,58 @@ void Platform::InitPlatform()
 void Platform::Update()
 {
 	faseTime = FindGO<FaseTime>("faseTime");
+
+	//四分休符の場合
+	if (noteIndex == 3)
+	{
+		enemyBullet = FindGO<EnemyBullet>("enemyBullet");
+		Vector3 diff = enemyBullet->bulletPos - notePos;
+		if (diff.Length() < 50.0f)
+		{
+			Hit(1);
+		}
+	}
+
+	//二分休符の場合
+	if (noteIndex == 4)
+	{
+		bullet = FindGO<Bullet>("bullet");
+		Vector3 diff = bullet->bulletPos - notePos;
+		if (diff.Length() < 50.0f)
+		{
+			Hit(2);
+		}
+	}
+
 	//足場の寿命が来ると削除
 	if (dethFase == faseTime->TurnCount - crieteFase)
 	{
 		DeleteGO(this);
+	}
+
+	//HPが尽きても削除
+	if (platformHP <= 0)
+	{
+		DeleteGO(this);
+	}
+}
+
+void Platform::Hit(int Index)
+{
+	//敵の弾を防ぐ
+	if (Index == 1)
+	{
+		platformHP -= enemyBullet->Attack;
+		enemyBullet->Deactivate();
+	}
+	//自分の弾を強化する
+	else
+	{
+		if (bullet->IsBuff == false)
+		{
+			bullet->Attack *= 2;
+			bullet->IsBuff = true;
+		}
 	}
 }
 
