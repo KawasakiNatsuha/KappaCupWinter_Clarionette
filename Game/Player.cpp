@@ -93,6 +93,8 @@ void Player::Update()
 			if (playerMode == installation)
 			{
 				platformManeger->PlatformInstallation();
+				//ここで効果音再生
+				game->IsPlaySound(4);
 				coolTime = 1.0f;
 			}
 		}
@@ -153,6 +155,9 @@ void Player::PlayerModeChange(PlayerMode playermode)
 			DeleteGO(platformManeger);
 		}
 	}
+
+	//ここで効果音再生
+	game->IsPlaySound(6);
 
 	//切り替え後クールタイムをリセット
 	coolTime = 0.0f;
@@ -235,6 +240,9 @@ void Player::PlayerMove()
 			//ジャンプさせる。
 			moveSpeed.y = 500.0f;
 			isJump = true;
+
+			//ここで効果音再生
+			game->IsPlaySound(1);
 		}
 	}
 	//地面に付いていなかったら。
@@ -248,6 +256,9 @@ void Player::PlayerMove()
 			//二段ジャンプさせる。
 			moveSpeed.y += 400.0f;
 			isJump = false;
+
+			//ここで効果音再生
+			game->IsPlaySound(1);
 		}
 	}
 
@@ -430,6 +441,9 @@ void Player::PlayerAttack()
 	{
 		m_forward.Normalize();
 		bullet->Fire(m_shotPos, m_forward,noteAttack[player_noteIndex],player_noteIndex);
+
+		//ここで効果音再生
+		game->IsPlaySound(2);
 	}
 	coolTime = noteCoolTime[player_noteIndex];
 }
@@ -440,6 +454,8 @@ void Player::Hit(int damege)
 	if (inDamage == false)
 	{
 		HP -= damege;
+		//ここで効果音再生
+		game->IsPlaySound(5);
 		invincibleTime = 3.0f;
 		if (HP <= 0)
 		{

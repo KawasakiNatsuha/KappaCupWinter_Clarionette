@@ -7,6 +7,7 @@ class FaseTime;
 class Player;
 class UI;
 class Result;
+class Game;
 
 class Enemy:public IGameObject
 {
@@ -47,6 +48,7 @@ private:
 	Player* player;
 	UI* ui;
 	GameTime gametime;
+	Game* game;
 
 	FontRender fontRender;
 	wchar_t font[256];

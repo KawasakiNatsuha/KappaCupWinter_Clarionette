@@ -2,6 +2,7 @@
 #include "FaseTime.h"
 #include "Player.h"
 #include "UI.h"
+#include "Game.h"
 
 FaseTime::FaseTime() :gen(std::random_device{}()), notemode(0, 4)
 {
@@ -34,6 +35,12 @@ void FaseTime::Update()
 		{
 			faseTimer -= 1;
 			deltaTime -= 1.0f;
+
+			if (faseTimer <= 3)
+			{
+				//ここで効果音再生
+				game->IsPlaySound(9);
+			}
 		}
 	}
 
@@ -51,6 +58,9 @@ void FaseTime::Update()
 			player->PlayerModeChange(Player::PlayerMode::installation);
 		}
 		nowFase = evadeFase;
+
+		//ここで効果音再生
+		game->IsPlaySound(7);
 	}
 	//回避フェーズ→攻撃フェーズ
 	else if (nowFase == evadeFase && faseTimer <= 0)
@@ -63,6 +73,8 @@ void FaseTime::Update()
 		TurnCount += 1;
 		nowFase = attackFase;
 
+		//ここで効果音再生
+		game->IsPlaySound(8);
 
 		while (true)
 		{

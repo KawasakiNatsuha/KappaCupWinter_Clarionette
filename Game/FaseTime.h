@@ -3,6 +3,7 @@
 
 class Player;
 class UI;
+class Game;
 
 class FaseTime:public IGameObject
 {
@@ -33,6 +34,7 @@ private:
 	float deltaTime;		//1フレームの経過時間
 	Player* player;			//プレイヤー(フェーズ切り替え時に攻撃モードに戻すのに使う)
 	UI* ui;					//UI(フェーズ切り替え時の演出に使う)
+	Game* game;
 	
 	std::mt19937 gen;		//乱数
 	std::uniform_int_distribution<int> notemode;		//音符の種類抽選

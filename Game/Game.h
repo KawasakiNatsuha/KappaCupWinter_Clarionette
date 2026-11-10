@@ -9,6 +9,7 @@ class Enemy;
 class FaseTime;
 class Bullet;
 class EnemyBullet;
+class Sound;
 
 class Game : public IGameObject
 {
@@ -20,6 +21,9 @@ public:
 	void Render(RenderContext& rc);
 	void Blinking(float interval, ModelRender& model, RenderContext& rc);
 	void ReSet();
+	void IsPlaySound(int numbers);
+
+	Sound* sound;
 
 private:
 	GameTime gameTime;

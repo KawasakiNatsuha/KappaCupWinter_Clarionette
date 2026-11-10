@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "UI.h"
 #include "Result.h"
+#include "Game.h"
 
 Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6), offset(-100, 100)
 {
@@ -104,6 +105,7 @@ void Enemy::Update()
 void Enemy::OnHit(int damage)
 {
 	EnemyHP -= damage;
+	game->IsPlaySound(3);
 }
 
 //攻撃処理

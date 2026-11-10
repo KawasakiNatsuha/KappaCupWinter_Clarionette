@@ -289,6 +289,14 @@ void UI::CardLottery()
 			break;
 		case stop:
 			//回転させていって
+
+			if (Reset == false)
+			{
+				//ここで効果音再生
+				game->IsPlaySound(10);
+				Reset = true;
+			}
+
 			rot += 100.0f * g_gameTime->GetFrameDeltaTime();
 			if (rot >= 30.0f && rot <= 150.0f)
 			{
@@ -331,6 +339,7 @@ void UI::CardLottery()
 					CardKind[i][faseTime->nowNoteIndex[i]].Update();
 				}
 				ChooseTime[1].SetPosition({ -600.0f,0.0f,0.0f });
+				Reset = false;
 				State = choose;
 			}
 			break;

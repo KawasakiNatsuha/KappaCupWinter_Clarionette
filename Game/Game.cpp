@@ -10,6 +10,7 @@
 #include "Platform.h"
 #include "UI.h"
 #include "Bullet.h"
+#include "Sound.h"
 
 bool Game::Start()
 {	
@@ -20,6 +21,9 @@ bool Game::Start()
 	debugStage = NewGO<DebugStage>(0, "debugstage");
 	enemy = NewGO<Enemy>(0, "enemy");
 	faseTime = NewGO<FaseTime>(0, "faseTime");
+
+	//音
+	sound = NewGO<Sound>(0, "sound");
 
 	//テスト用初期化
 	enemy->Init(100, 10, 0.1f, 100.0f,1.0f);
@@ -35,6 +39,9 @@ bool Game::Start()
 	skyCube->SetType(enSkyCubeType_NightToon_2);
 	skyCube->SetScale(5000.0f);
 	g_renderingEngine->SetAmbientByIBLTexture(skyCube->GetTextureFilePath(), 0.5f);
+
+	//memo::仮のBGM再生
+	IsPlaySound(100);
 
 	return true;
 }
@@ -93,4 +100,16 @@ void Game::ReSet()
 	platform = NewGO<Platform>(0, "platform");
 	platform->noteIndex = 2;
 	platform->InitPlatform();
+}
+
+void Game::IsPlaySound(int numbers)
+{
+	if (numbers <= 100)
+	{
+		sound->PlaySE(numbers);
+	}
+	else
+	{
+		sound->PlayBGM(numbers);
+	}
 }
