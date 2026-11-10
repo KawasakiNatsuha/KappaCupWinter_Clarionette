@@ -7,8 +7,8 @@
 Bullet::Bullet()
 {
 	bulletModel[0].Init("Assets/modelData/bullet1.tkm");
-	bulletModel[1].Init("Assets/modelData/bullet2.tkm");
-	bulletModel[2].Init("Assets/modelData/bullet3.tkm");
+	bulletModel[1].Init("Assets/modelData/bullet3.tkm");
+	bulletModel[2].Init("Assets/modelData/bullet2.tkm");
 }
 
 Bullet::~Bullet()

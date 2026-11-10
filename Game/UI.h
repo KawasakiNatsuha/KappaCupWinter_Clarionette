@@ -41,8 +41,10 @@ public:
 	int PhaseIndex;
 
 private:
-	/// インゲーム中のUI。0は画面全体の固定UI、1は自分のHPバー、2は敵のHPバー。
+	//インゲーム中のUI。0は画面全体の固定UI、1は自分のHPバー、2は敵のHPバー。
 	SpriteRender InGameUI[3];
+	//現在の音符を表すUI。player、platform等の配列番号と一致している。
+	SpriteRender noteUI[5];
 	//フェーズ切り替えの際のUI。0はプレイヤーの攻撃フェーズ、1は敵の攻撃フェーズに切り替わる際の画像
 	SpriteRender ChangePhaseUI[2];
 	//フェーズをわかりやすく表すためのUI。0はプレイヤー、1は敵のフェーズ時にうっすら表示するフィルター的なもの
@@ -91,5 +93,6 @@ private:
 
 	FaseTime* faseTime;
 	Game* game;
+	Player* player;
 };
 

@@ -39,6 +39,12 @@ void UI::InitUI()
 	InGameUI[1].Init("Assets/sprite/playerHP.DDS", 1920.0f, 1080.0f);
 	InGameUI[2].Init("Assets/sprite/enemyHP.DDS", 1920.0f, 1080.0f);
 
+	noteUI[0].Init("Assets/sprite/quoter.DDS", 1920.0f, 1080.0f);
+	noteUI[1].Init("Assets/sprite/duplet.DDS", 1920.0f, 1080.0f);
+	noteUI[2].Init("Assets/sprite/eighth.DDS", 1920.0f, 1080.0f);
+	noteUI[3].Init("Assets/sprite/harf.DDS", 1920.0f, 1080.0f);
+	noteUI[4].Init("Assets/sprite/quoter2.DDS", 1920.0f, 1080.0f);
+
 	ChangePhaseUI[0].Init("Assets/sprite/change_player.DDS", 1920.0f, 1080.0f);
 	ChangePhaseUI[1].Init("Assets/sprite/change_enemy.DDS", 1920.0f, 1080.0f);
 
@@ -60,8 +66,8 @@ void UI::InitUI()
 	for (int i = 0;i < 3;i++)
 	{
 		CardKind[i][0].Init("Assets/sprite/Card1.DDS", 512.0f, 768.0f);
-		CardKind[i][1].Init("Assets/sprite/Card2.DDS", 512.0f, 768.0f);
-		CardKind[i][2].Init("Assets/sprite/Card3.DDS", 512.0f, 768.0f);
+		CardKind[i][1].Init("Assets/sprite/Card3.DDS", 512.0f, 768.0f);
+		CardKind[i][2].Init("Assets/sprite/Card2.DDS", 512.0f, 768.0f);
 		CardKind[i][3].Init("Assets/sprite/Card4.DDS", 512.0f, 768.0f);
 		CardKind[i][4].Init("Assets/sprite/Card5.DDS", 512.0f, 768.0f);
 		CardKind[i][5].Init("Assets/sprite/CardEX.DDS", 512.0f, 768.0f);
@@ -78,6 +84,12 @@ void UI::InitUI()
 void UI::Update()
 {
 	faseTime = FindGO<FaseTime>("faseTime");
+	player = FindGO<Player>("player");
+
+	if (player == nullptr)
+	{
+		return;
+	}
 
 	//HPバーを動かす
 	GageUpdate();
@@ -101,7 +113,6 @@ void UI::Update()
 
 void UI::GageUpdate()
 {
-	Player* player = FindGO<Player>("player");
 	Enemy* enemy = FindGO<Enemy>("enemy");
 
 	if (player == nullptr or enemy == nullptr)
@@ -452,6 +463,9 @@ void UI::Render(RenderContext& rc)
 
 	//数字の更新
 	FontUI(rc);
+
+	//現在の音符の種類
+	noteUI[player->player_noteIndex].Draw(rc);
 
 	//フェーズ切り替え演出
 	if (IsChange == true)
