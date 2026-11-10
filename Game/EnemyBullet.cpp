@@ -35,7 +35,7 @@ void EnemyBullet::Update()
 
 		if (player == nullptr)
 		{
-			DeleteGO(this);
+			Deactivate();
 		}
 
 		if (player->isWait == true)

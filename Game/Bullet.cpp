@@ -44,7 +44,7 @@ void Bullet::Update()
 
 	if (ui == nullptr)
 	{
-		DeleteGO(this);
+		Deactivate();
 	}
 
 	if (faseTime->nowFase == FaseTime::Fase::evadeFase)

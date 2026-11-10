@@ -413,6 +413,11 @@ void Player::PlayerAnimetion()
 //プレイヤーの攻撃
 void Player::PlayerAttack()
 {
+	if (player_noteIndex > 2)
+	{
+		return;
+	}
+
 	//カメラの前方向
 	Vector3 m_forward = g_camera3D->GetForward();
 	//m_forward.y += 0.1f;
@@ -535,4 +540,5 @@ void Player::Init()
 
 	position = { 0.0f,0.0f,0.0f };
 	modelRender.SetPosition(position);
+	modelRender.Update();
 }

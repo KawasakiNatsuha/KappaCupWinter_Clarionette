@@ -23,13 +23,13 @@ void PlatformManeger::PlatformManegerInit()
 	noteGor[4].IniTranslucent("Assets/modelData/halfRest_Gor.tkm");
 
 	//半透明モデル限定初期化(ただし壁はそのまま)
-	if (noteGorIndex < 3)
-	{
+	/*if (noteGorIndex < 3)
+	{*/
 		rotX.SetRotationDegX(-90.0f);
 		noteGor[noteGorIndex].SetScale(1.5f, 1.5f, 1.5f);
 
 		noteGor[noteGorIndex].SetRotation(noteRotate);
-	}
+	//}
 }
 
 void PlatformManeger::Update()

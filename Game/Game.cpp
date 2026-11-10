@@ -22,7 +22,7 @@ bool Game::Start()
 	faseTime = NewGO<FaseTime>(0, "faseTime");
 
 	//テスト用初期化
-	enemy->Init(100, 100, 0.1f, 100.0f,1.0f);
+	enemy->Init(100, 10, 0.1f, 100.0f,1.0f);
 	ui->InitUI();
 
 	//初期足場
@@ -83,7 +83,7 @@ void Game::ReSet()
 		enemyBullets->Init();
 	}
 	//memo::これテスト用の初期化、ステージに応じて数値を変えること
-	enemy->Init(100, 100, 0.1f, 100.0f, 1.0f);
+	enemy->Init(100, 10, 0.1f, 100.0f, 1.0f);
 	for (auto bullets : FindGOs<Bullet>("bullet"))
 	{
 		DeleteGO(bullets);

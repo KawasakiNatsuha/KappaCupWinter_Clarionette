@@ -21,7 +21,7 @@ void Platform::InitPlatform()
 	note[1].Init("Assets/modelData/note2.tkm");
 	note[2].Init("Assets/modelData/note3.tkm");
 	note[3].Init("Assets/modelData/quarterRest.tkm");
-	//note[4].Init("Assets/modelData/halfRest.tkm");
+	note[4].Init("Assets/modelData/halfRest.tkm");
 
 	note[noteIndex].SetPosition(notePos);
 	note[noteIndex].SetRotation(noteRotate);

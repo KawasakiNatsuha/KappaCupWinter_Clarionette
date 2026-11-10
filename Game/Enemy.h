@@ -6,6 +6,7 @@
 class FaseTime;
 class Player;
 class UI;
+class Result;
 
 class Enemy:public IGameObject
 {

@@ -31,7 +31,7 @@ public:
 
 private:
 	//足場のモデル
-	ModelRender note[4];
+	ModelRender note[5];
 
 	PhysicsStaticObject noteObject;
 	FaseTime* faseTime;

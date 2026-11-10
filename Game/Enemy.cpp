@@ -5,6 +5,7 @@
 #include "EnemyBullet.h"
 #include "Bullet.h"
 #include "UI.h"
+#include "Result.h"
 
 Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6), offset(-100, 100)
 {
@@ -25,6 +26,7 @@ void Enemy::Init(int hp, int attack, float CoolTime, float MoveSpeed, float Chan
 	firstChangeMoveModeTime = changeMoveModeTime;
 	position = { 100.0f,100.0f,1000.0f };
 	testModel.SetPosition(position);
+	testModel.Update();
 }
 
 Enemy::~Enemy()
@@ -36,11 +38,6 @@ void Enemy::Update()
 {
 	ui = FindGO<UI>("ui");
 	player = FindGO<Player>("player");
-
-	if (player == nullptr)
-	{
-		DeleteGO(this);
-	}
 
 	if (player->isWait == true)
 	{
@@ -237,6 +234,8 @@ void Enemy::Render(RenderContext& rc)
 //死亡処理
 void Enemy::IsDie()
 {
+	//リザルト画面作る
+	NewGO<Result>(0, "result");
 	//最後に自分削除
 	DeleteGO(this);
 }

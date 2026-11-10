@@ -104,6 +104,11 @@ void UI::GageUpdate()
 	Player* player = FindGO<Player>("player");
 	Enemy* enemy = FindGO<Enemy>("enemy");
 
+	if (player == nullptr or enemy == nullptr)
+	{
+		return;
+	}
+
 	int player_maxHP = player->MaxHP;
 	int player_hp = player->HP;
 	int enemy_maxHP = enemy->EnemyMaxHP;
