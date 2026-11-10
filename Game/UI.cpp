@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "FaseTime.h"
+#include "Game.h"
 
 UI::UI()
 {
@@ -22,9 +23,9 @@ UI::UI()
 	ChangePhaseUI[0].SetPosition(position);
 	ChangePhaseUI[1].SetPosition(position);
 
-	CardPos[0] = { 600.0f,1000.0f,0.0f };
+	CardPos[0] = { -600.0f,1000.0f,0.0f };
 	CardPos[1] = { 0.0f,1000.0f,0.0f };
-	CardPos[2] = { -600.0f,1000.0f,0.0f };
+	CardPos[2] = { 600.0f,1000.0f,0.0f };
 }
 
 UI::~UI()
@@ -65,6 +66,13 @@ void UI::InitUI()
 		CardKind[i][4].Init("Assets/sprite/Card5.DDS", 512.0f, 768.0f);
 		CardKind[i][5].Init("Assets/sprite/CardEX.DDS", 512.0f, 768.0f);
 	}
+
+	ChooseTime[0].Init("Assets/sprite/chooseBack.DDS", 1920.0f, 1080.0f);
+	ChooseTime[1].Init("Assets/sprite/fream.DDS", 1920.0f, 1080.0f);
+
+	GameOberUI[0].Init("Assets/sprite/black.DDS", 1920.0f, 1080.0f);
+	GameOberUI[1].Init("Assets/sprite/GameOber.DDS", 1920.0f, 1080.0f);
+	GameOberUI[2].Init("Assets/sprite/GameOber_Car .DDS", 1920.0f, 1080.0f);
 }
 
 void UI::Update()
@@ -306,20 +314,62 @@ void UI::CardLottery()
 					CardKind[i][faseTime->nowNoteIndex[i]].SetRotation(CardRot);
 					CardKind[i][faseTime->nowNoteIndex[i]].Update();
 				}
+				ChooseTime[1].SetPosition({ -600.0f,0.0f,0.0f });
 				State = choose;
 			}
 			break;
 		case choose:
-			//memo::ここで弾を選択する回ですよ
+			//カードを選択する
+			if (g_pad[0]->IsTrigger(enButtonLeft))
+			{
+				cardCoose -= 1;
+			}
+			if (g_pad[0]->IsTrigger(enButtonRight))
+			{
+				cardCoose += 1;
+			}
+			if (cardCoose < 0)
+			{
+				cardCoose = 0;
+			}
+			if (cardCoose > 2)
+			{
+				cardCoose = 2;
+			}
+			switch (cardCoose)
+			{
+			case 0:
+				ChooseTime[1].SetPosition({ -600.0f,0.0f,0.0f });
+				break;
+			case 1:
+				ChooseTime[1].SetPosition({ 0.0f,0.0f,0.0f });
+				break;
+			case 2:
+				ChooseTime[1].SetPosition({ 600.0f,0.0f,0.0f });
+				break;
+			}
+
 			for (int i = 0;i < 3;i++)
 			{
 				CardKind[i][faseTime->nowNoteIndex[i]].SetPosition(CardPos[i]);
 				CardKind[i][faseTime->nowNoteIndex[i]].Update();
 			}
+			ChooseTime[1].Update();
+
+			if (g_pad[0]->IsTrigger(enButtonA))
+			{
+				Player* player = FindGO<Player>("player");
+				player->player_noteIndex = faseTime->nowNoteIndex[cardCoose];
+
+				State = fadeOut;
+			}
+
 			break;
 		case fadeOut:
 			faseChanged = false;
 			IsChange = false;
+			cardCoose = 0;
+			State = move;
 			break;
 		}
 	}
@@ -328,6 +378,55 @@ void UI::CardLottery()
 		faseChanged = false;
 		IsChange = false;
 	}
+}
+
+void UI::GameOber(RenderContext& rc)
+{
+	GameOberUI[0].Draw(rc);
+
+	coloer += 0.005f;
+	GameOberUI[1].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, coloer));
+	GameOberUI[2].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, coloer));
+
+	if (coloer >= 1.0f)
+	{
+		if (g_pad[0]->IsTrigger(enButtonUp))
+		{
+			carPos.y += 60.0f;
+		}
+		if (g_pad[0]->IsTrigger(enButtonDown))
+		{
+			carPos.y -= 60.0f;
+		}
+
+		if (carPos.y >= 0.0f)
+		{
+			carPos.y = 0.0f;
+		}
+		if (carPos.y <= -60.0f)
+		{
+			carPos.y = -60.0f;
+		}
+
+		if (g_pad[0]->IsTrigger(enButtonA))
+		{
+			//コンティニューの場合
+			if (carPos.y == 0.0f)
+			{
+				game = FindGO<Game>("game");
+				game->ReSet();
+			}
+		}
+	}
+
+	GameOberUI[2].SetPosition(carPos);
+
+	GameOberUI[1].Update();
+	GameOberUI[2].Update();
+
+	GameOberUI[0].Draw(rc);
+	GameOberUI[1].Draw(rc);
+	GameOberUI[2].Draw(rc);
 }
 
 void UI::Render(RenderContext& rc)
@@ -357,6 +456,8 @@ void UI::Render(RenderContext& rc)
 
 	if (faseChanged == true)
 	{
+		ChooseTime[0].Draw(rc);
+
 		if (State == move)
 		{
 			CardKind[0][5].Draw(rc);
@@ -383,6 +484,15 @@ void UI::Render(RenderContext& rc)
 			CardKind[0][faseTime->nowNoteIndex[0]].Draw(rc);
 			CardKind[1][faseTime->nowNoteIndex[1]].Draw(rc);
 			CardKind[2][faseTime->nowNoteIndex[2]].Draw(rc);
+
+			ChooseTime[1].Draw(rc);
 		}
 	}
+}
+
+void UI::Init()
+{
+	IsChange = false;
+	faseChanged = false;
+	coloer = 0.0f;
 }

@@ -9,8 +9,6 @@
 Enemy::Enemy() :gen(std::random_device{}()), mode(1, 6), offset(-100, 100)
 {
 	testModel.Init("Assets/modelData/unityChan.tkm");
-	Vector3 position = { 100.0f,100.0f,1000.0f };
-	testModel.SetPosition(position);
 
 	//オブジェクトプールの初期化
 	m_bulletPool.Init(100, "EnemyBullet");
@@ -25,6 +23,8 @@ void Enemy::Init(int hp, int attack, float CoolTime, float MoveSpeed, float Chan
 	moveSpeed = MoveSpeed;
 	changeMoveModeTime = ChangeMoveModeTime;
 	firstChangeMoveModeTime = changeMoveModeTime;
+	position = { 100.0f,100.0f,1000.0f };
+	testModel.SetPosition(position);
 }
 
 Enemy::~Enemy()
@@ -35,6 +35,17 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
 	ui = FindGO<UI>("ui");
+	player = FindGO<Player>("player");
+
+	if (player == nullptr)
+	{
+		DeleteGO(this);
+	}
+
+	if (player->isWait == true)
+	{
+		return;
+	}
 
 	if (ui->IsChange == true)
 	{
@@ -77,7 +88,6 @@ void Enemy::Update()
 	}
 
 	//playerの方を向く
-	player = FindGO<Player>("player");
 	Vector3 diff = position - player->position;
 	diff.y = 0.0f;
 
@@ -102,7 +112,6 @@ void Enemy::OnHit(int damage)
 //攻撃処理
 void Enemy::Attack(int attackPower)
 {
-	player = FindGO<Player>("player"); 
 	Vector3 diff = position - player->position;
 	diff.x += (float)offset(gen);
 	diff.y += (float)offset(gen);

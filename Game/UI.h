@@ -3,6 +3,7 @@
 class Player;
 class Enemy;
 class FaseTime;
+class Game;
 
 class UI:public IGameObject
 {
@@ -15,6 +16,8 @@ public:
 	void FontUI(RenderContext& rc);		//数字フォントの表示
 	void ChangePhase();
 	void ChangeAction();
+	void GameOber(RenderContext& rc);
+	void Init();
 
 	//画像読み込みをコンストラクタですると絶対ごちゃつくのでここで代用。
 	void InitUI();
@@ -48,6 +51,10 @@ private:
 	SpriteRender NumberFont[11];
 	//抽選時のカード。EXは裏面。
 	SpriteRender CardKind[3][6];
+	//抽選時の背景と選択肢。1=背景、2=選択時のフレーム
+	SpriteRender ChooseTime[2];
+	//ゲームオーバー時のフェードインに使う画像。1=背景、2=常に表示させる画像、3=カーソル
+	SpriteRender GameOberUI[3];
 	
 	//カードの座標。
 	Vector3 CardPos[3];
@@ -58,7 +65,6 @@ private:
 		choose,		//選んでもらう
 		fadeOut		//選択後、消える
 	};
-
 	CardStep State;
 
 	//ここからエフェクト
@@ -68,16 +74,22 @@ private:
 	//エフェクトの角度
 	Quaternion EfectRotate;
 
-	Vector3 position;
-	float startPosition = 1000.0f;
-	float endPosition = 0.0f;
-	float easingRadio;
-	float stopTime = 1.5f;
-	bool faseChanged = false;
-	Quaternion CardRot;
-	float rot;
-	bool StopCard[3] = { false };
+	Vector3 position;					//フェーズ切り替え演出の座標
+	float startPosition = 1000.0f;		//フェーズ切り替え時の画像の初期座標
+	float endPosition = 0.0f;			//画像の終了時の座標
+	float easingRadio;					//お試し(多分うまくいってない)
+	float stopTime = 1.5f;				//フェーズ切り替え演出の停止時間
+	bool faseChanged = false;			//フェーズ切り替え演出中か
+	Quaternion CardRot;					//カード回転演出のためのクォータニオン
+	float rot;							//カード回転演出の角度
+	bool StopCard[3] = { false };		//カードが止まったかどうか
+	int cardCoose = 0;					//現在選んでいるカードの番号
+	float deltaTime = 0.0f;				//1フレームの経過時間
+	float coloer = 0.0f;				//フェードインのための不透明度
+	Vector3 carPos;						//ゲームオーバー時のカーソルの座標
+	bool Reset = false;
 
 	FaseTime* faseTime;
+	Game* game;
 };
 

@@ -42,6 +42,11 @@ void Bullet::Update()
 	ui = FindGO<UI>("ui");
 	faseTime = FindGO<FaseTime>("faseTime");
 
+	if (ui == nullptr)
+	{
+		DeleteGO(this);
+	}
+
 	if (faseTime->nowFase == FaseTime::Fase::evadeFase)
 	{
 		Deactivate();

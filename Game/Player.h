@@ -7,12 +7,14 @@ class FaseTime;
 class Enemy;
 class UI;
 class Game;
+class Plarform;
 
 class Player:public IGameObject
 	
 {
 public:
 	Player();
+	~Player();
 	void Update();
 	void Render(RenderContext& rc);
 	void PlayerMove();
@@ -21,6 +23,8 @@ public:
 	void PlayerAnimetion();
 	void PlayerAttack();
 	void Hit(int damege);
+	void GameOber();
+	void Init();
 	
 
 	//メンバ変数。
@@ -31,6 +35,7 @@ public:
 		enAnimationClip_Walk,
 		enAnimationClip_Jump,
 		enAnimationClip_Run,
+		enAnimationClip_Deth,
 		enAnimationClip_Num,
 	};
 	AnimationClip animationClips[enAnimationClip_Num];		//アニメーションクリップ。
@@ -54,6 +59,8 @@ public:
 	int HP = 100;				//playerのHP
 	int MaxHP = 100;			//playerの最大HP
 	int player_noteIndex = 0;	//音符の形状
+
+	bool isWait = false;		//trueのとき他のクラスが停止する
 
 private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
@@ -91,5 +98,8 @@ private:
 	int fallCount = 0;			//連続落下した回数(3回以上で初期の足場に戻る)
 	bool inDamage = false;		//ダメージ後の無敵時間中か
 	float invincibleTime = 3.0f;	//無敵時間
+
+	SpriteRender fadeOUT;			//ゲームオーバー時のフェードアウト用の黒画像
+	float coloer = 0.0f;			//フェードアウトに使う不透明度
 };
 

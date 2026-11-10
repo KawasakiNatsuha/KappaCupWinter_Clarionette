@@ -11,6 +11,7 @@ public:
 	~FaseTime();
 	void Update();
 	void Render(RenderContext& rc);
+	void Init();
 
 	enum Fase
 	{

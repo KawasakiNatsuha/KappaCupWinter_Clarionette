@@ -9,6 +9,7 @@
 #include "Enemy.h"
 #include "UI.h"
 #include "Game.h"
+#include "Platform.h"
 
 Player::Player()
 {
@@ -21,6 +22,8 @@ Player::Player()
 	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
 	animationClips[enAnimationClip_Run].Load("Assets/animData/Sop_run.tka");
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
+	animationClips[enAnimationClip_Deth].Load("Assets/animData/Sop_deth.tka");
+	animationClips[enAnimationClip_Deth].SetLoopFlag(false);
 	//ユニティちゃんのモデルを読み込む。
 	modelRender.Init("Assets/modelData/Sop4.tkm", animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
@@ -30,7 +33,15 @@ Player::Player()
 	//オブジェクトプールの初期化
 	m_bulletPool.Init(50, "bullet");
 
+	//黒画像の読み込み
+	fadeOUT.Init("Assets/sprite/black.DDS", 1920.0f, 1080.0f);
+
 	game = FindGO<Game>("game");
+}
+
+Player::~Player()
+{
+	
 }
 
 void Player::Update()
@@ -57,9 +68,12 @@ void Player::Update()
 		platformManeger->PlatformManegerInit();
 	}
 	
-	PlayerMove();
-	PlayerRotate();
-	ManagePlayerState();
+	if (isWait == false)
+	{
+		PlayerMove();
+		PlayerRotate();
+		ManagePlayerState();
+	}
 	PlayerAnimetion();
 
 	//アタックフェーズのときの処理
@@ -106,6 +120,12 @@ void Player::Update()
 	{
 		buckPosition = position;
 		fallCount = 0;
+	}
+
+	//HPが0でゲームオーバー
+	if (HP <= 0)
+	{
+		GameOber();
 	}
 
 	modelRender.Update();
@@ -240,16 +260,26 @@ void Player::PlayerMove()
 	//落下したとき
 	if (position.y < -1500.0f)
 	{
-		position = buckPosition;
-		position.y += 50.0f;
-		fallCount += 1;
+		Platform* platform = FindGO<Platform>("platform");
+		if (platform != nullptr)
+		{
+			position = platform->notePos;
+			position.y += 50.0f;
+		}
+		else
+		{
+			platform = NewGO<Platform>(0, "platform");
+			platform->noteIndex = 1;
+			platform->InitPlatform();
+		}
+		/*fallCount += 1;
 
 		if (fallCount >= 3)
 		{
 			position.x = 0.0f;
 			position.y = 50.0f;
 			position.z = 0.0f;
-		}
+		}*/
 
 		Hit(5);
 		characterController.SetPosition(position);
@@ -374,6 +404,9 @@ void Player::PlayerAnimetion()
 		//ダッシュアニメーションを再生する
 		modelRender.PlayAnimation(enAnimationClip_Run);
 		break;
+	case 4:
+		modelRender.PlayAnimation(enAnimationClip_Deth);
+		break;
 	}
 }
 
@@ -382,7 +415,7 @@ void Player::PlayerAttack()
 {
 	//カメラの前方向
 	Vector3 m_forward = g_camera3D->GetForward();
-	m_forward.y += 0.2f;
+	//m_forward.y += 0.1f;
 	m_forward.Normalize();
 	//プレイヤーの座標からちょっとだけ上方向(弾が出てくる場所)
 	Vector3 m_shotPos = { position.x, position.y + 70.0f, position.z };
@@ -403,7 +436,39 @@ void Player::Hit(int damege)
 	{
 		HP -= damege;
 		invincibleTime = 3.0f;
+		if (HP <= 0)
+		{
+			invincibleTime = 1.0f;
+		}
 		inDamage = true;
+	}
+}
+
+//ゲームオーバー処理
+void Player::GameOber()
+{
+	//他のクラスの動きを止める
+	isWait = true;
+
+	if (inDamage == false)
+	{
+		if (playerState != 4)
+		{
+			Vector3 cameraPosition = { position.x + 100.0f,position.y + 100.0f,position.z + 100.0f };
+
+			//プレイヤーの上空にカメラを持っていく
+			g_camera3D->SetPosition(cameraPosition);
+			g_camera3D->SetTarget(position);
+			playerState = 4;
+		}
+
+		if (coloer <= 1.0f)
+		{
+			coloer += 0.005f;
+			fadeOUT.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, coloer));
+
+			fadeOUT.Update();
+		}
 	}
 }
 
@@ -436,6 +501,38 @@ void Player::Render(RenderContext& rc)
 	//それ以外は常時描画
 	else
 	{
+		if (isWait == true)
+		{
+			if (coloer >= 1.0f)
+			{
+				ui->GameOber(rc);
+				return;
+			}
+
+			fadeOUT.Draw(rc);
+		}
+
 		modelRender.Draw(rc);
 	}
+}
+
+//初期化処理
+void Player::Init()
+{
+	playerState = 0;
+	playerMode = attack;
+	HP = 100;
+	MaxHP = 100;
+	player_noteIndex = 0;
+	isWait = false;
+	coolTime = 0;
+	isJump = false;
+	fallCount = 0;
+	inDamage = false;
+	invincibleTime = 3.0f;
+	coloer = 0.0f;
+	game = FindGO<Game>("game");
+
+	position = { 0.0f,0.0f,0.0f };
+	modelRender.SetPosition(position);
 }

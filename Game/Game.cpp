@@ -4,23 +4,25 @@
 #include "GameCamera.h"
 #include "DebugStage.h"
 #include "Enemy.h"
+#include "EnemyBullet.h"
 #include "PlatformManeger.h"
 #include "FaseTime.h"
 #include "Platform.h"
 #include "UI.h"
+#include "Bullet.h"
 
 bool Game::Start()
 {	
 	//memo::まずは最初のテストプレイ用
-	NewGO<Player>(0, "player");
-	NewGO<GameCamera>(0, "gamecamera");
-	NewGO<DebugStage>(0, "debugstage");
-	Enemy* enemy = NewGO<Enemy>(0, "enemy");
-	NewGO<FaseTime>(0, "faseTime");
-	UI* ui = NewGO<UI>(0, "ui");
+	ui = NewGO<UI>(0, "ui");
+	player = NewGO<Player>(0, "player");
+	gameCamera = NewGO<GameCamera>(0, "gamecamera");
+	debugStage = NewGO<DebugStage>(0, "debugstage");
+	enemy = NewGO<Enemy>(0, "enemy");
+	faseTime = NewGO<FaseTime>(0, "faseTime");
 
 	//テスト用初期化
-	enemy->Init(100, 1, 0.1f, 100.0f,1.0f);
+	enemy->Init(100, 100, 0.1f, 100.0f,1.0f);
 	ui->InitUI();
 
 	//初期足場
@@ -61,4 +63,34 @@ void Game::Blinking(float interval, ModelRender& model, RenderContext& rc)
 	{
 		model.Draw(rc);
 	}
+}
+
+//初期化・リセット
+void Game::ReSet()
+{
+	player->Init();
+	for (auto platforms : FindGOs<Platform>("platform"))
+	{
+		platforms->Init();
+	}
+	if (player->platformManeger != nullptr)
+	{
+		DeleteGO(player->platformManeger);
+	}
+	faseTime->Init();
+	for (auto enemyBullets : FindGOs<EnemyBullet>("enemyBullet"))
+	{
+		enemyBullets->Init();
+	}
+	//memo::これテスト用の初期化、ステージに応じて数値を変えること
+	enemy->Init(100, 100, 0.1f, 100.0f, 1.0f);
+	for (auto bullets : FindGOs<Bullet>("bullet"))
+	{
+		DeleteGO(bullets);
+	}
+
+	//初期足場
+	platform = NewGO<Platform>(0, "platform");
+	platform->noteIndex = 2;
+	platform->InitPlatform();
 }

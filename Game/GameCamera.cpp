@@ -35,6 +35,12 @@ bool GameCamera::Start()
 void GameCamera::Update()
 {
 	ui = FindGO<UI>("ui");
+	m_player = FindGO<Player>("player");
+
+	if (m_player->isWait == true)
+	{
+		return;
+	}
 
 	if (ui->IsChange == true)
 	{

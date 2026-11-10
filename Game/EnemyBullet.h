@@ -13,6 +13,7 @@ public:
 	void BulletMove();
 	void Fire(const Vector3& pos, const Vector3& dir, int attack);
 	void Hit();
+	void Init();
 
 	//移動する方向
 	Vector3 bulletMoveVec;

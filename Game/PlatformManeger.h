@@ -13,6 +13,7 @@ public:
 	void PlatformInstallation();
 	void PlatformManegerInit();
 	void Operation();
+	void Init();
 
 	//実際に表示するモデルの番号(Playerから渡してもらう)
 	int noteGorIndex;

@@ -18,6 +18,11 @@ void FaseTime::Update()
 	//Playerを見る
 	player = FindGO<Player>("player");
 
+	if (player->isWait == true)
+	{
+		return;
+	}
+
 	//UIを見る
 	ui = FindGO<UI>("ui");
 
@@ -82,4 +87,11 @@ void FaseTime::Update()
 void FaseTime::Render(RenderContext& rc)
 {
 	timeFont.Draw(rc);
+}
+
+void FaseTime::Init()
+{
+	nowFase = attackFase;
+	TurnCount = 0;
+	faseTimer = 15;
 }

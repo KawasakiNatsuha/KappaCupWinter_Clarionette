@@ -31,6 +31,17 @@ void EnemyBullet::Update()
 	if (IsActive()==true)
 	{
 		faseTime = FindGO<FaseTime>("faseTime");
+		player = FindGO<Player>("player");
+
+		if (player == nullptr)
+		{
+			DeleteGO(this);
+		}
+
+		if (player->isWait == true)
+		{
+			return;
+		}
 
 		if (faseTime->nowFase==Player::PlayerMode::attack)
 		{
@@ -69,7 +80,6 @@ void EnemyBullet::BulletMove()
 
 void EnemyBullet::Hit()
 {
-	player = FindGO<Player>("player");
 	if (player != nullptr)
 	{
 		//当たり判定
@@ -90,4 +100,9 @@ void EnemyBullet::Hit()
 			Deactivate();
 		}
 	}
+}
+
+void EnemyBullet::Init()
+{
+	DeleteGO(this);
 }

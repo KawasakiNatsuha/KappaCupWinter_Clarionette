@@ -20,7 +20,7 @@ void Platform::InitPlatform()
 	note[0].Init("Assets/modelData/note_quarterNote.tkm");
 	note[1].Init("Assets/modelData/note2.tkm");
 	note[2].Init("Assets/modelData/note3.tkm");
-	//note[3].Init("Assets/modelData/quarterRest.tkm");
+	note[3].Init("Assets/modelData/quarterRest.tkm");
 	//note[4].Init("Assets/modelData/halfRest.tkm");
 
 	note[noteIndex].SetPosition(notePos);
@@ -31,31 +31,42 @@ void Platform::InitPlatform()
 
 	faseTime = FindGO<FaseTime>("faseTime");
 	crieteFase = faseTime->TurnCount;
+
+	isInit = true;
 }
 
 void Platform::Update()
 {
 	faseTime = FindGO<FaseTime>("faseTime");
 
-	//四分休符の場合
-	if (noteIndex == 3)
+	if (isInit == true)
 	{
-		enemyBullet = FindGO<EnemyBullet>("enemyBullet");
-		Vector3 diff = enemyBullet->bulletPos - notePos;
-		if (diff.Length() < 50.0f)
+		//四分休符の場合
+		if (noteIndex == 3)
 		{
-			Hit(1);
+			enemyBullet = FindGO<EnemyBullet>("enemyBullet");
+			if (enemyBullet != nullptr)
+			{
+				Vector3 diff = enemyBullet->bulletPos - notePos;
+				if (diff.Length() < 50.0f)
+				{
+					Hit(1);
+				}
+			}
 		}
-	}
 
-	//二分休符の場合
-	if (noteIndex == 4)
-	{
-		bullet = FindGO<Bullet>("bullet");
-		Vector3 diff = bullet->bulletPos - notePos;
-		if (diff.Length() < 50.0f)
+		//二分休符の場合
+		if (noteIndex == 4)
 		{
-			Hit(2);
+			bullet = FindGO<Bullet>("bullet");
+			if (enemyBullet != nullptr)
+			{
+				Vector3 diff = bullet->bulletPos - notePos;
+				if (diff.Length() < 50.0f)
+				{
+					Hit(2);
+				}
+			}
 		}
 	}
 
@@ -79,6 +90,11 @@ void Platform::Hit(int Index)
 	{
 		platformHP -= enemyBullet->Attack;
 		enemyBullet->Deactivate();
+
+		if (platformHP <= 0)
+		{
+			DeleteGO(this);
+		}
 	}
 	//自分の弾を強化する
 	else
@@ -101,4 +117,9 @@ void Platform::Render(RenderContext& rc)
 	{
 		note[noteIndex].Draw(rc);
 	}
+}
+
+void Platform::Init()
+{
+	DeleteGO(this);
 }

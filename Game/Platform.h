@@ -15,6 +15,7 @@ public:
 	void Render(RenderContext& rc);
 	void InitPlatform();
 	void Hit(int Index);
+	void Init();
 
 	//この足場の座標
 	Vector3 notePos = { 0.0f,0.0f,0.0f };
@@ -30,7 +31,7 @@ public:
 
 private:
 	//足場のモデル
-	ModelRender note[3];
+	ModelRender note[4];
 
 	PhysicsStaticObject noteObject;
 	FaseTime* faseTime;
@@ -41,5 +42,6 @@ private:
 	int crieteFase;		//作られたフェーズ
 	int dethFase = 5;		//足場の寿命
 	int platformHP = 50;	//四分休符の耐久値
+	bool isInit = false;	//初期化が終わったかどうか
 };
 

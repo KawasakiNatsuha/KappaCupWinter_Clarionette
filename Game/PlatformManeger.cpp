@@ -37,6 +37,11 @@ void PlatformManeger::Update()
 	//playerを更新
 	player = FindGO<Player>("player");
 
+	if (player->isWait == true)
+	{
+		return;
+	}
+
 	//足場の操作
 	Operation();
 
@@ -101,7 +106,7 @@ void PlatformManeger::PlatformInstallation()
 	platform->InitPlatform();
 
 	//半透明モデルを削除
-	player->platformManeger = nullptr;
+	//player->platformManeger = nullptr;
 	DeleteGO(this);
 }
 
