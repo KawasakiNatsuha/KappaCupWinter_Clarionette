@@ -354,10 +354,14 @@ void UI::CardLottery()
 			if (g_pad[0]->IsTrigger(enButtonLeft))
 			{
 				cardCoose -= 1;
+				//ここで効果音再生
+				game->IsPlaySound(11);
 			}
 			if (g_pad[0]->IsTrigger(enButtonRight))
 			{
 				cardCoose += 1;
+				//ここで効果音再生
+				game->IsPlaySound(11);
 			}
 			if (cardCoose < 0)
 			{
@@ -389,6 +393,9 @@ void UI::CardLottery()
 
 			if (g_pad[0]->IsTrigger(enButtonA))
 			{
+				//ここで効果音再生
+				game->IsPlaySound(12);
+
 				Player* player = FindGO<Player>("player");
 				player->player_noteIndex = faseTime->nowNoteIndex[cardCoose];
 

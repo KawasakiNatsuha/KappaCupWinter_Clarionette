@@ -10,6 +10,7 @@ public:
 	~GameCamera();
 	bool Start();
 	void Update();
+	void Reset();
 
 	Player* m_player;	//プレイヤー。
 	UI* ui;				//フェーズ切り替え演出用
@@ -17,5 +18,8 @@ public:
 
 	//カメラ感度。memo::後で設定で変えられるようにすると◎
 	float cameraSensitivity = 1.5f;
+
+	Vector3 m_cameraResetTarget;
+	bool m_isCameraReset = false;
 };;
 

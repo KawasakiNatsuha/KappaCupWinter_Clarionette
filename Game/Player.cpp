@@ -277,7 +277,7 @@ void Player::PlayerMove()
 		if (g_pad[0]->IsTrigger(enButtonA) && isJump == true)
 		{
 			//二段ジャンプさせる。
-			moveSpeed.y += 400.0f;
+			moveSpeed.y = 400.0f;
 			isJump = false;
 
 			//ここで効果音再生

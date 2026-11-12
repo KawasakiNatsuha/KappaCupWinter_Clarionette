@@ -89,7 +89,6 @@ void Game::ReSet()
 	{
 		DeleteGO(player->platformManeger);
 	}
-	faseTime->Init();
 	for (auto enemyBullets : FindGOs<EnemyBullet>("enemyBullet"))
 	{
 		enemyBullets->Deactivate();
@@ -101,6 +100,7 @@ void Game::ReSet()
 		bullets->Deactivate();
 	}
 	player->Init();
+	faseTime->Init();
 
 	isInGame = true;
 }

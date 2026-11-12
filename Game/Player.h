@@ -66,14 +66,14 @@ private:
 	//音符の種類に応じた発射クールタイム。memo::後で増やすよ
 	float noteCoolTime[3] =
 	{
-		0.3,0.2,0.1
+		0.3,0.1,0.2
 	};
 	//その時のクールタイム。
 	float coolTime;
 	//音符の種類に応じた攻撃力。
 	int noteAttack[3] =
 	{
-		5,3,1
+		5,1,3
 	};
 
 	GameTime gametime;

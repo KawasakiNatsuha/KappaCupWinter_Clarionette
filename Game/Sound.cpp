@@ -6,7 +6,7 @@
 Sound::Sound()
 {
 	//BGM
-	g_soundEngine->ResistWaveFileBank(100, "Assets/waveDeta/audiostock_1576968.wav");
+	g_soundEngine->ResistWaveFileBank(100, "Assets/waveDeta/audiostock_1576968.wav");	//ステージ1のBGM
 
 	//SE
 	g_soundEngine->ResistWaveFileBank(1, "Assets/waveDeta/audiostock_69490.wav");		//ジャンプ
@@ -19,6 +19,8 @@ Sound::Sound()
 	g_soundEngine->ResistWaveFileBank(8, "Assets/waveDeta/audiostock_1074135.wav");		//プレイヤーフェーズ突入時
 	g_soundEngine->ResistWaveFileBank(9, "Assets/waveDeta/audiostock_796413.wav");		//フェーズ切り替え三秒前～の時計の音
 	g_soundEngine->ResistWaveFileBank(10, "Assets/waveDeta/audiostock_1254810.wav");	//カードをめくる音
+	g_soundEngine->ResistWaveFileBank(11, "Assets/waveDeta/audiostock_145175.wav");		//カード選択する音
+	g_soundEngine->ResistWaveFileBank(12, "Assets/waveDeta/audiostock_1697969.wav");	//カード決定の音
 }
 
 void Sound::PlayBGM(int number)

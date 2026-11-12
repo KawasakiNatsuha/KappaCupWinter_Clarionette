@@ -19,9 +19,9 @@ public:
 		attackFase,
 		evadeFase,
 	};
-	Fase nowFase = attackFase;		//現在のフェーズ
+	Fase nowFase = evadeFase;		//現在のフェーズ
 	int TurnCount = 0;		//経過ターン
-	int faseTimer = 15;     //制限時間(変わる方)
+	int faseTimer = 0;     //制限時間(変わる方)
 
 	//抽選された音符(三択)
 	int nowNoteIndex[3];

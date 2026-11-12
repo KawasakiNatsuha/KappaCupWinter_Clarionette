@@ -17,11 +17,26 @@ Platform::~Platform()
 void Platform::InitPlatform()
 {
 	//初期化
-	note[0].Init("Assets/modelData/note_quarterNote.tkm");
-	note[1].Init("Assets/modelData/note2.tkm");
-	note[2].Init("Assets/modelData/note3.tkm");
-	note[3].Init("Assets/modelData/quarterRest.tkm");
-	note[4].Init("Assets/modelData/halfRest.tkm");
+	if (noteIndex == 0)
+	{
+		note[0].Init("Assets/modelData/note_quarterNote.tkm");
+	}
+	if (noteIndex == 1)
+	{
+		note[1].Init("Assets/modelData/note2.tkm");
+	}
+	if (noteIndex == 2)
+	{
+		note[2].Init("Assets/modelData/note3.tkm");
+	}
+	if (noteIndex == 3)
+	{
+		note[3].Init("Assets/modelData/quarterRest.tkm");
+	}
+	if (noteIndex == 4)
+	{
+		note[4].Init("Assets/modelData/halfRest.tkm");
+	}
 
 	note[noteIndex].SetPosition(notePos);
 	note[noteIndex].SetRotation(noteRotate);

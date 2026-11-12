@@ -110,7 +110,7 @@ void FaseTime::Render(RenderContext& rc)
 
 void FaseTime::Init()
 {
-	nowFase = attackFase;
+	nowFase = evadeFase;
 	TurnCount = 0;
-	faseTimer = 15;
+	faseTimer = 0;
 }
