@@ -19,6 +19,13 @@ void FaseTime::Update()
 	//Playerを見る
 	player = FindGO<Player>("player");
 
+	game = FindGO<Game>("game");
+
+	if (game->isInGame == false)
+	{
+		return;
+	}
+
 	if (player->isWait == true)
 	{
 		return;

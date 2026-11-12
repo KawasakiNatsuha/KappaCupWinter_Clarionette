@@ -239,5 +239,5 @@ void Enemy::IsDie()
 	//リザルト画面作る
 	NewGO<Result>(0, "result");
 	//最後に自分削除
-	DeleteGO(this);
+	//DeleteGO(this);
 }

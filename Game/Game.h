@@ -24,6 +24,7 @@ public:
 	void IsPlaySound(int numbers);
 
 	Sound* sound;
+	bool isInGame = false;	//ゲーム中かそうでないか
 
 private:
 	GameTime gameTime;

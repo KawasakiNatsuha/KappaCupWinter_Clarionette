@@ -38,12 +38,14 @@ void UI::InitUI()
 	InGameUI[0].Init("Assets/sprite/mainUI.DDS", 1920.0f, 1080.0f);
 	InGameUI[1].Init("Assets/sprite/playerHP.DDS", 1920.0f, 1080.0f);
 	InGameUI[2].Init("Assets/sprite/enemyHP.DDS", 1920.0f, 1080.0f);
+	InGameUI[3].Init("Assets/sprite/gauge_back.DDS", 1920.0f, 1080.0f);
+	InGameUI[4].Init("Assets/sprite/syouzyun.DDS", 1920.0f, 1080.0f);
 
 	noteUI[0].Init("Assets/sprite/quoter.DDS", 1920.0f, 1080.0f);
 	noteUI[1].Init("Assets/sprite/duplet.DDS", 1920.0f, 1080.0f);
 	noteUI[2].Init("Assets/sprite/eighth.DDS", 1920.0f, 1080.0f);
-	noteUI[3].Init("Assets/sprite/harf.DDS", 1920.0f, 1080.0f);
-	noteUI[4].Init("Assets/sprite/quoter2.DDS", 1920.0f, 1080.0f);
+	noteUI[4].Init("Assets/sprite/harf.DDS", 1920.0f, 1080.0f);
+	noteUI[3].Init("Assets/sprite/quoter2.DDS", 1920.0f, 1080.0f);
 
 	ChangePhaseUI[0].Init("Assets/sprite/change_player.DDS", 1920.0f, 1080.0f);
 	ChangePhaseUI[1].Init("Assets/sprite/change_enemy.DDS", 1920.0f, 1080.0f);
@@ -79,6 +81,10 @@ void UI::InitUI()
 	GameOberUI[0].Init("Assets/sprite/black.DDS", 1920.0f, 1080.0f);
 	GameOberUI[1].Init("Assets/sprite/GameOber.DDS", 1920.0f, 1080.0f);
 	GameOberUI[2].Init("Assets/sprite/GameOber_Car .DDS", 1920.0f, 1080.0f);
+
+	PlayerModeUI[0].Init("Assets/sprite/playerMode.DDS", 1920.0f, 1080.0f);
+	PlayerModeUI[1].Init("Assets/sprite/attack.DDS", 1920.0f, 1080.0f);
+	PlayerModeUI[2].Init("Assets/sprite/inst.DDS", 1920.0f, 1080.0f);
 }
 
 void UI::Update()
@@ -456,6 +462,7 @@ void UI::GameOber(RenderContext& rc)
 
 void UI::Render(RenderContext& rc)
 {
+	InGameUI[3].Draw(rc);
 	InGameUI[2].Draw(rc);
 	InGameUI[1].Draw(rc);
 	InGameUI[0].Draw(rc);
@@ -464,10 +471,22 @@ void UI::Render(RenderContext& rc)
 	if (faseTime->nowFase == Player::PlayerMode::attack)
 	{
 		PhaseUI[0].Draw(rc);
+		InGameUI[4].Draw(rc);
 	}
 	else
 	{
 		PhaseUI[1].Draw(rc);
+	}
+
+	//モード。
+	PlayerModeUI[0].Draw(rc);
+	if (player->playerMode == Player::PlayerMode::attack)
+	{
+		PlayerModeUI[1].Draw(rc);
+	}
+	else
+	{
+		PlayerModeUI[2].Draw(rc);
 	}
 
 	//数字の更新

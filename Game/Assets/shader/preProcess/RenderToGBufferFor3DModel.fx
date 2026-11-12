@@ -95,7 +95,10 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
         psIn.normal, psIn.tangent, psIn.biNormal, psIn.uv ) ;
     psOut.normal.w = 1.0f;
     // メタリックスムースを出力。
-    psOut.metaricShadowSmooth = g_spacular.Sample(g_sampler, psIn.uv);
+    //psOut.metaricShadowSmooth = g_spacular.Sample(g_sampler, psIn.uv);
+    
+    psOut.metaricShadowSmooth = float4(0.0, 0.0, 0.0, 0.1);
+    
     // 影パラメータ。
     psOut.metaricShadowSmooth.g = 255.0f * isShadowReciever;
     

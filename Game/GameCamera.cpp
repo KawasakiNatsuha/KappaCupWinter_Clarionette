@@ -71,13 +71,10 @@ void GameCamera::Update()
 	axisX.Normalize();
 	qRot.SetRotationDeg(axisX, cameraSensitivity * y);
 	qRot.Apply(m_toCameraPos);
-	//カメラの回転の上限をチェックする。
-	//注視点から視点までのベクトルを正規化する。
-	//正規化すると、ベクトルの大きさが１になる。
-	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
+
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -0.5f) {
+	if (toPosDir.y < -0.8f) {
 		//カメラが上向きすぎ。
 		m_toCameraPos = toCameraPosOld;
 	}

@@ -36,7 +36,7 @@ Player::Player()
 	//黒画像の読み込み
 	fadeOUT.Init("Assets/sprite/black.DDS", 1920.0f, 1080.0f);
 
-	game = FindGO<Game>("game");
+	player_noteIndex = 3;
 }
 
 Player::~Player()
@@ -46,7 +46,15 @@ Player::~Player()
 
 void Player::Update()
 {
+	modelRender.Update();
+
 	ui = FindGO<UI>("ui");
+	game = FindGO<Game>("game");
+
+	if (game->isInGame == false)
+	{
+		return;
+	}
 
 	if (ui->IsChange == true)
 	{
@@ -109,11 +117,24 @@ void Player::Update()
 		//モード切替
 		if (g_pad[0]->IsTrigger(switchButton))
 		{
-			PlayerModeChange(installation);
+			if (playerMode == installation)
+			{
+				PlayerModeChange(attack);
+			}
 		}
-		if (g_pad[0]->IsTrigger(switchButton2))
+		else if (g_pad[0]->IsTrigger(switchButton2))
 		{
-			PlayerModeChange(attack);
+			if (playerMode == attack)
+			{
+				PlayerModeChange(installation);
+			}
+		}
+	}
+	else
+	{
+		if (platformManeger != nullptr)
+		{
+			DeleteGO(platformManeger);
 		}
 	}
 
@@ -136,7 +157,7 @@ void Player::Update()
 //モード切替
 void Player::PlayerModeChange(PlayerMode playermode)
 {
-	if (playermode == attack && playerMode == attack)
+	if (playermode == installation)
 	{
 		//モードを切り替え、半透明モデルを生成
 		playerMode = installation;
@@ -146,7 +167,7 @@ void Player::PlayerModeChange(PlayerMode playermode)
 		//引継ぎが終わったら初期化
 		platformManeger->PlatformManegerInit();
 	}
-	if (playermode == installation && playerMode == installation)
+	else if (playermode == attack)
 	{
 		//モードを切り替え、半透明モデルがあるなら削除
 		playerMode = attack;
@@ -161,6 +182,8 @@ void Player::PlayerModeChange(PlayerMode playermode)
 
 	//切り替え後クールタイムをリセット
 	coolTime = 0.0f;
+
+	g_pad[0]->SetVibration(0.3f, 0.1f);
 }
 
 //プレイヤーの移動
@@ -283,14 +306,6 @@ void Player::PlayerMove()
 			platform->noteIndex = 1;
 			platform->InitPlatform();
 		}
-		/*fallCount += 1;
-
-		if (fallCount >= 3)
-		{
-			position.x = 0.0f;
-			position.y = 50.0f;
-			position.z = 0.0f;
-		}*/
 
 		Hit(5);
 		characterController.SetPosition(position);
@@ -319,7 +334,7 @@ void Player::PlayerMove()
 	}
 	if (position.z < -1000.0f)
 	{
-		position.z = 1000.0f;
+		position.z = -1000.0f;
 		ui->PlayEffects(2, position - Vector3{ 0.0f,0.0f,30.0f }, 2);
 	}
 
@@ -425,6 +440,13 @@ void Player::PlayerAnimetion()
 void Player::PlayerAttack()
 {
 	if (player_noteIndex > 2)
+	{
+		return;
+	}
+
+	game = FindGO<Game>("game");
+
+	if (game->isInGame == false)
 	{
 		return;
 	}
@@ -540,6 +562,11 @@ void Player::Render(RenderContext& rc)
 //初期化処理
 void Player::Init()
 {
+	position = { 0.0f,0.0f,0.0f };
+	modelRender.SetPosition(position);
+	characterController.SetPosition(position);
+	modelRender.Update();
+
 	playerState = 0;
 	playerMode = attack;
 	HP = 100;
@@ -553,8 +580,4 @@ void Player::Init()
 	invincibleTime = 3.0f;
 	coloer = 0.0f;
 	game = FindGO<Game>("game");
-
-	position = { 0.0f,0.0f,0.0f };
-	modelRender.SetPosition(position);
-	modelRender.Update();
 }

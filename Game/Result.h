@@ -1,6 +1,7 @@
 #pragma once
 
 class UI;
+class Game;
 
 class Result:public IGameObject
 {
@@ -16,5 +17,8 @@ private:
 	int turn;						//累計経過ターン数
 	float coler;					//不透明度
 	bool PorM;						//不透明度が上がるか下がるか
+	int waitCount = 0;				//ゲーム終了後すぐにリザルトが抹消されるのを防ぐ
+
+	Game* game;
 };
 

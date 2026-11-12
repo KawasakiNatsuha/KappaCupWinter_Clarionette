@@ -41,8 +41,8 @@ public:
 	int PhaseIndex;
 
 private:
-	//インゲーム中のUI。0は画面全体の固定UI、1は自分のHPバー、2は敵のHPバー。
-	SpriteRender InGameUI[3];
+	//インゲーム中のUI。0は画面全体の固定UI、1は自分のHPバー、2は敵のHPバー、3はHPバーの背景、4は照準。
+	SpriteRender InGameUI[5];
 	//現在の音符を表すUI。player、platform等の配列番号と一致している。
 	SpriteRender noteUI[5];
 	//フェーズ切り替えの際のUI。0はプレイヤーの攻撃フェーズ、1は敵の攻撃フェーズに切り替わる際の画像
@@ -57,6 +57,8 @@ private:
 	SpriteRender ChooseTime[2];
 	//ゲームオーバー時のフェードインに使う画像。1=背景、2=常に表示させる画像、3=カーソル
 	SpriteRender GameOberUI[3];
+	//プレイヤーのモードを可視化するためのUI。
+	SpriteRender PlayerModeUI[3];
 	
 	//カードの座標。
 	Vector3 CardPos[3];

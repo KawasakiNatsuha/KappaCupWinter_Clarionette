@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Result.h"
 #include "UI.h"
+#include "Game.h"
 
 Result::Result()
 {
@@ -10,6 +11,9 @@ Result::Result()
 	back[3].Init("Assets/sprite/up.DDS", 1920.0f, 1080.0f);
 	sentence.Init("Assets/sprite/sentence1.DDS", 1920.0f, 1080.0f);
 	next.Init("Assets/sprite/sentence2.DDS", 1920.0f, 1080.0f);
+
+	game = FindGO<Game>("game");
+	game->IsPlaySound(101);
 }
 
 void Result::Update()
@@ -31,8 +35,22 @@ void Result::Update()
 	{
 		PorM = false;
 	}
+
 	next.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, coler));
 	next.Update();
+
+	waitCount += 1;
+
+	if (waitCount <= 5)
+	{
+		return;
+	}
+
+	if (g_pad[0]->IsPressAnyKey())
+	{
+		game->ReSet();
+		DeleteGO(this);
+	}
 }
 
 void Result::Render(RenderContext& rc)

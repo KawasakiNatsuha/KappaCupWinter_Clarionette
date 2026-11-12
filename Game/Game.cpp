@@ -43,6 +43,8 @@ bool Game::Start()
 	//memo::仮のBGM再生
 	IsPlaySound(100);
 
+	isInGame = true;
+
 	return true;
 }
 
@@ -75,11 +77,14 @@ void Game::Blinking(float interval, ModelRender& model, RenderContext& rc)
 //初期化・リセット
 void Game::ReSet()
 {
-	player->Init();
 	for (auto platforms : FindGOs<Platform>("platform"))
 	{
 		platforms->Init();
 	}
+	//初期足場
+	platform = NewGO<Platform>(0, "platform");
+	platform->noteIndex = 2;
+	platform->InitPlatform();
 	if (player->platformManeger != nullptr)
 	{
 		DeleteGO(player->platformManeger);
@@ -87,19 +92,17 @@ void Game::ReSet()
 	faseTime->Init();
 	for (auto enemyBullets : FindGOs<EnemyBullet>("enemyBullet"))
 	{
-		enemyBullets->Init();
+		enemyBullets->Deactivate();
 	}
 	//memo::これテスト用の初期化、ステージに応じて数値を変えること
 	enemy->Init(100, 10, 0.1f, 100.0f, 1.0f);
 	for (auto bullets : FindGOs<Bullet>("bullet"))
 	{
-		DeleteGO(bullets);
+		bullets->Deactivate();
 	}
+	player->Init();
 
-	//初期足場
-	platform = NewGO<Platform>(0, "platform");
-	platform->noteIndex = 2;
-	platform->InitPlatform();
+	isInGame = true;
 }
 
 void Game::IsPlaySound(int numbers)
